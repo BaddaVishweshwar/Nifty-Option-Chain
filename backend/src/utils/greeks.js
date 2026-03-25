@@ -1,41 +1,78 @@
 /**
- * Black-Scholes Greek Calculator
+ * Black-Scholes Greek Calculator - High Precision
  */
 
-// Standard Normal Cumulative Distribution Function
+// Precise Standard Normal Cumulative Distribution Function (CDF)
 function cnd(x) {
-    const a1 = 0.319381530;
-    const a2 = -0.356563782;
-    const a3 = 1.781477937;
-    const a4 = -1.821255978;
-    const a5 = 1.330274429;
-    const L = Math.abs(x);
-    const K = 1.0 / (1.0 + 0.2316419 * L);
-    let d = 1.0 - 1.0 / Math.sqrt(2 * Math.PI) * Math.exp(-L * L / 2.0) * (a1 * K + a2 * K * K + a3 * Math.pow(K, 3) + a4 * Math.pow(K, 4) + a5 * Math.pow(K, 5));
-    
-    if (x < 0) {
-        return 1.0 - d;
+    const b1 = 0.319381530;
+    const b2 = -0.356563782;
+    const b3 = 1.781477937;
+    const b4 = -1.821255978;
+    const b5 = 1.330274429;
+    const p = 0.2316419;
+    const c = 0.39894228;
+
+    if (x >= 0.0) {
+        let t = 1.0 / (1.0 + p * x);
+        return (1.0 - c * Math.exp(-x * x / 2.0) * t * (t * (t * (t * (t * b5 + b4) + b3) + b2) + b1));
+    } else {
+        let t = 1.0 / (1.0 - p * x);
+        return (c * Math.exp(-x * x / 2.0) * t * (t * (t * (t * (t * b5 + b4) + b3) + b2) + b1));
     }
-    return d;
 }
 
-// Standard Normal Probability Density Function
+// Standard Normal Probability Density Function (PDF)
 function nd(x) {
     return (1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * x * x);
 }
 
 /**
+ * Calculates theoretical Black-Scholes price
+ */
+function blackScholesPrice(type, S, K, t, r, v) {
+    if (t <= 0) return Math.max(0, type === 'CE' ? S - K : K - S);
+    const d1 = (Math.log(S / K) + (r + (v * v) / 2) * t) / (v * Math.sqrt(t));
+    const d2 = d1 - v * Math.sqrt(t);
+
+    if (type === 'CE') {
+        return S * cnd(d1) - K * Math.exp(-r * t) * cnd(d2);
+    } else {
+        return K * Math.exp(-r * t) * cnd(-d2) - S * cnd(-d1);
+    }
+}
+
+/**
+ * Derives Implied Volatility (IV) from option price using Newton-Raphson
+ */
+function calculateIV(type, S, K, t, r, marketPrice) {
+    if (marketPrice <= 0.05) return 0.15; // Default low IV for near-zero prices
+    
+    let v = 0.3; // Initial guess (30%)
+    const maxIterations = 20;
+    const precision = 0.0001;
+
+    for (let i = 0; i < maxIterations; i++) {
+        const price = blackScholesPrice(type, S, K, t, r, v);
+        const diff = marketPrice - price;
+        if (Math.abs(diff) < precision) return v;
+
+        // Vega (derivative of price with respect to volatility)
+        const d1 = (Math.log(S / K) + (r + (v * v) / 2) * t) / (v * Math.sqrt(t));
+        const vega = S * Math.sqrt(t) * nd(d1);
+        
+        if (vega < 0.0001) break; // Avoid division by very small vega
+        v = v + diff / vega;
+        if (v <= 0) v = 0.01; // Floor volatility
+    }
+    return v;
+}
+
+/**
  * Calculates Greeks using Black-Scholes model
- * @param {string} type - 'CE' or 'PE'
- * @param {number} S - Spot Price
- * @param {number} K - Strike Price
- * @param {number} t - Time to Expiry (years)
- * @param {number} r - Risk-free rate (decimal, e.g., 0.07 for 7%)
- * @param {number} v - Volatility (decimal, e.g., 0.2 for 20%)
  */
 function calculateGreeks(type, S, K, t, r, v) {
-    if (t <= 0) t = 0.00001; // Avoid division by zero
-    if (v <= 0) v = 0.1;      // Default min volatility for calculation
+    if (t <= 0) t = 0.00001; 
+    if (v <= 0) v = 0.01;
 
     const d1 = (Math.log(S / K) + (r + (v * v) / 2) * t) / (v * Math.sqrt(t));
     const d2 = d1 - v * Math.sqrt(t);
@@ -46,9 +83,8 @@ function calculateGreeks(type, S, K, t, r, v) {
 
     let delta, theta, gamma, vega;
 
-    // Gamma and Vega are same for both CALL and PUT
     gamma = n_d1 / (S * v * Math.sqrt(t));
-    vega = (S * n_d1 * Math.sqrt(t)) / 100; // Divided by 100 to get value per 1% change in IV
+    vega = (S * n_d1 * Math.sqrt(t)) / 100;
 
     if (type === 'CE') {
         delta = N_d1;
@@ -62,8 +98,9 @@ function calculateGreeks(type, S, K, t, r, v) {
         delta: parseFloat(delta.toFixed(4)),
         gamma: parseFloat(gamma.toFixed(6)),
         theta: parseFloat(theta.toFixed(4)),
-        vega: parseFloat(vega.toFixed(4))
+        vega: parseFloat(vega.toFixed(4)),
+        iv: v * 100 // Return as percentage
     };
 }
 
-module.exports = { calculateGreeks };
+module.exports = { calculateGreeks, calculateIV, blackScholesPrice };

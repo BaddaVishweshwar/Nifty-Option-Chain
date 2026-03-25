@@ -1,24 +1,29 @@
-const { calculateGreeks } = require("./greeks");
+const { calculateGreeks, calculateIV } = require("./greeks");
 
 const normalizeOptionsChain = (rawChain, spotPrice = 0, expiryDate = null) => {
   const strikesMap = new Map();
-  const riskFreeRate = 0.07; // 7% standard for India
+  const riskFreeRate = 0.10; // 10% standard for India NSE
   
-  // Calculate time to expiry in years
+  // Calculate time to expiry in years (Force IST context)
   let timeToExpiry = 0.00001;
   if (expiryDate) {
     const now = new Date();
+    // Convert current time to IST offset (UTC+5:30)
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const nowIst = new Date(now.getTime() + istOffset);
+    
     const expiry = new Date(expiryDate);
-    // Set expiry to end of day (3:30 PM IST is typically 10:00 AM UTC, but let's just use end of day)
-    expiry.setHours(15, 30, 0, 0); 
-    const diffMs = expiry.getTime() - now.getTime();
-    // Use a floor of 1 hour (1/24/365 years) to prevent Greeks from blowing up
-    const minTime = 1 / (24 * 365);
+    // Expiry is end of day IST (3:30 PM)
+    const expiryIst = new Date(expiry.getTime() + istOffset);
+    expiryIst.setHours(15, 30, 0, 0); 
+    
+    const diffMs = expiryIst.getTime() - nowIst.getTime();
+    const minTime = 1 / (24 * 365); // 1 hour min
     timeToExpiry = Math.max(minTime, diffMs / (1000 * 60 * 60 * 24 * 365));
   }
 
   rawChain.forEach(item => {
-    if (item.strike_price === -1) return; // Skip underlying index entry
+    if (item.strike_price === -1) return;
 
     const strikePrice = item.strike_price;
     if (!strikesMap.has(strikePrice)) {
@@ -31,34 +36,35 @@ const normalizeOptionsChain = (rawChain, spotPrice = 0, expiryDate = null) => {
 
     const strike = strikesMap.get(strikePrice);
     
-    // Check if Greeks are provided by API, otherwise calculate
-    let delta = item.delta || 0;
-    let gamma = item.gamma || 0;
-    let theta = item.theta || 0;
-    let vega = item.vega || 0;
+    // Greeks Derivation
+    let delta = 0, gamma = 0, theta = 0, vega = 0, iv = 0;
 
-    // Use API IV if present, otherwise fallback to 15% for analytical calculation
-    const isFallbackIV = !(item.iv > 0);
-    const calcIV = (isFallbackIV ? 15.0 : item.iv) / 100;
-
-    if ((delta === 0 || theta === 0) && spotPrice > 0) {
+    if (spotPrice > 0 && item.ltp > 0) {
       try {
+        // 1. Derive IV from LTP (Implied Volatility)
+        iv = calculateIV(
+          item.option_type,
+          spotPrice,
+          strikePrice,
+          timeToExpiry,
+          riskFreeRate,
+          item.ltp
+        );
+
+        // 2. Calculate Greeks using the Derived IV
         const calculated = calculateGreeks(
           item.option_type,
           spotPrice,
           strikePrice,
           timeToExpiry,
           riskFreeRate,
-          calcIV
+          iv
         );
         delta = calculated.delta;
         gamma = calculated.gamma;
         theta = calculated.theta;
         vega = calculated.vega;
-
-        if (strikePrice === Math.round(spotPrice / 100) * 100) {
-           console.log(`[ATM Greeks] ${item.option_type} S:${spotPrice} K:${strikePrice} IV:${calcIV} t:${timeToExpiry.toFixed(6)} -> D:${delta} T:${theta}`);
-        }
+        iv = calculated.iv; // Return as percentage for UI
       } catch (e) {
         console.error(`[Greeks Error] ${item.option_type} strike ${strikePrice}:`, e.message);
       }
@@ -71,7 +77,7 @@ const normalizeOptionsChain = (rawChain, spotPrice = 0, expiryDate = null) => {
       oi: item.oi || 0,
       oiChange: item.oich || 0,
       volume: item.volume || 0,
-      iv: isFallbackIV ? 15.0 : item.iv, // Show fallback IV in UI
+      iv: parseFloat(iv.toFixed(2)),
       delta,
       gamma,
       theta,
