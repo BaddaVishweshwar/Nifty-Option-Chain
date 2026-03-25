@@ -109,7 +109,16 @@ const initUpstoxWS = async (token) => {
         });
 
     } catch (err) {
-        console.error("Upstox v3 WS Init Error:", err.response?.data || err.message);
+        const errData = err.response?.data;
+        console.error("Upstox v3 WS Init Error:", errData || err.message);
+        
+        // Auto-clear invalid/expired tokens to prevent phantom authentication loops
+        if (err.response?.status === 401 || errData?.errors?.[0]?.errorCode === 'UDAPI100050') {
+            console.log("[Upstox] Token expired or invalid. Auto-clearing session.");
+            tokenStore.clear();
+            if (io) io.emit("auth_error", { message: "Session expired. Please login again." });
+            if (io) io.emit("connection_status", { connected: false });
+        }
     }
 };
 
