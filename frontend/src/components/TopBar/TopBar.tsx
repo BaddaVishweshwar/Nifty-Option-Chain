@@ -29,6 +29,12 @@ export const TopBar: React.FC = () => {
     if (data.url) window.location.href = data.url;
   };
 
+  const handleUpstoxLogin = async () => {
+    const res = await fetch(`${API_URL}/auth/upstox/login`);
+    const data = await res.json();
+    if (data.url) window.location.href = data.url;
+  };
+
   return (
     <header className="flex items-center justify-between px-6 py-3 bg-zinc-900 border-b border-zinc-800 text-zinc-100">
       <div className="flex items-center gap-6">
@@ -59,12 +65,20 @@ export const TopBar: React.FC = () => {
 
       <div className="flex items-center gap-6">
         {!authenticated && (
-          <button 
-            onClick={handleLogin}
-            className="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg transition-all shadow-lg hover:shadow-blue-500/20"
-          >
-            Login to Fyers
-          </button>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={handleLogin}
+              className="px-3 py-1.5 bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 text-[10px] font-bold uppercase tracking-wider border border-blue-500/30 rounded-lg transition-all"
+            >
+              Fyers Login
+            </button>
+            <button 
+              onClick={handleUpstoxLogin}
+              className="px-3 py-1.5 bg-orange-600/10 hover:bg-orange-600/20 text-orange-400 text-[10px] font-bold uppercase tracking-wider border border-orange-500/30 rounded-lg transition-all"
+            >
+              Upstox Login
+            </button>
+          </div>
         )}
         <div className="flex flex-col items-end">
           <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Last Update</span>

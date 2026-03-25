@@ -10,12 +10,14 @@ interface OptionChainState {
   atmStrike: number;
   pcr: number;
   maxPain: number;
+  provider: 'fyers' | 'upstox';
   connected: boolean;
   showLots: boolean;
   lastUpdate: Date | null;
 
   setSymbol: (symbol: string) => void;
   setExpiry: (expiry: string) => void;
+  setProvider: (provider: 'fyers' | 'upstox') => void;
   toggleLots: () => void;
   setChainSnapshot: (chain: OptionStrike[], spot: number) => void;
   applyTick: (ticks: TickUpdate[]) => void;
@@ -31,12 +33,14 @@ export const useOptionChainStore = create<OptionChainState>((set) => ({
   atmStrike: 0,
   pcr: 0,
   maxPain: 0,
+  provider: 'fyers',
   connected: false,
   showLots: false,
   lastUpdate: null,
 
   setSymbol: (symbol: string) => set({ selectedSymbol: symbol }),
   setExpiry: (expiry: string) => set({ selectedExpiry: expiry }),
+  setProvider: (provider) => set({ provider }),
   toggleLots: () => set((state) => ({ showLots: !state.showLots })),
   
   setChainSnapshot: (chain: OptionStrike[], spot: number) => {
@@ -115,8 +119,8 @@ export const useOptionChainStore = create<OptionChainState>((set) => ({
         if (tick.oich !== undefined) leg.oiChange = tick.oich;
         if (tick.iv !== undefined) leg.iv = tick.iv;
 
-        // Use Synthetic Spot for Greeks if available (spotChanged will refresh all anyway)
-        if (newSpot > 0 && t > 0) {
+        // Only recalculate for Fyers. Upstox provides native Greeks in ticks.
+        if (state.provider === 'fyers' && newSpot > 0 && t > 0) {
             const vol = (leg.iv > 0 ? leg.iv : 15.0) / 100;
             const greeks = calculateGreeks(isCE ? "CE" : "PE", newSpot, strike.strike, t, riskFreeRate, vol, q);
             Object.assign(leg, greeks);
@@ -127,8 +131,8 @@ export const useOptionChainStore = create<OptionChainState>((set) => ({
       }
     });
 
-    // If spot changed, refresh all Greeks for consistency
-    if (spotChanged && newChain.length > 0 && t > 0) {
+    // If spot changed, refresh all Greeks for consistency (Fyers only)
+    if (state.provider === 'fyers' && spotChanged && newChain.length > 0 && t > 0) {
       newChain.forEach((strike, idx) => {
         const updatedStrike = { ...strike };
         
