@@ -3,7 +3,7 @@ const tokenStore = require("../auth/tokenStore");
 require('dotenv').config();
 
 const getFyersModel = () => {
-  const token = tokenStore.getAccessToken();
+  const token = tokenStore.getAccessToken() || process.env.FYERS_ACCESS_TOKEN;
   if (!token) return null;
   
   const fyersModel = new fyers.fyersModel();

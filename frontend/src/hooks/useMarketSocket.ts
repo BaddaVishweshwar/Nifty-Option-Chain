@@ -3,7 +3,7 @@ import { io, Socket } from 'socket.io-client';
 import { useOptionChainStore } from '../store/optionChainStore';
 import { TickUpdate } from '../types/optionChain';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+import { BACKEND_URL } from '../config';
 
 export function useMarketSocket() {
   const socketRef = useRef<Socket>();

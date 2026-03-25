@@ -1,27 +1,30 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useOptionChainStore } from '../../store/optionChainStore';
-import { Activity, ShieldCheck, ShieldAlert, ChevronDown } from 'lucide-react';
+import { ShieldCheck, ShieldAlert, ChevronDown } from 'lucide-react';
+import { API_URL } from '../../config';
 
 export const TopBar: React.FC = () => {
-  const { selectedSymbol, lastUpdate, connected, spotPrice, setSymbol, setConnectionStatus } = useOptionChainStore();
+  const { selectedSymbol, lastUpdate, connected, spotPrice, setSymbol } = useOptionChainStore();
   const [symbols, setSymbols] = useState<{ label: string, value: string }[]>([]);
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/market/symbols')
+    fetch(`${API_URL}/market/symbols`)
       .then(res => res.json())
       .then(setSymbols)
       .catch(console.error);
+  }, []);
 
-    fetch('http://localhost:3001/api/auth/status')
+  useEffect(() => {
+    fetch(`${API_URL}/auth/status`)
       .then(res => res.json())
       .then(data => setAuthenticated(data.authenticated))
       .catch(console.error);
-  }, []);
+  }, [connected]);
 
   const handleLogin = async () => {
-    const res = await fetch('http://localhost:3001/api/auth/login');
+    const res = await fetch(`${API_URL}/auth/login`);
     const data = await res.json();
     if (data.url) window.location.href = data.url;
   };

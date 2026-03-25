@@ -57,11 +57,27 @@ const handleCallback = async (req, res) => {
 
 const getStatus = (req, res) => {
   const token = tokenStore.getAccessToken();
-  res.json({ authenticated: !!token });
+  const staticToken = process.env.FYERS_ACCESS_TOKEN;
+  res.json({ authenticated: !!(token || staticToken) });
+};
+
+const getPrivacyStatus = (req, res) => {
+  res.json({ required: !!process.env.AUTH_PASSPHRASE });
+};
+
+const verifyPassphrase = (req, res) => {
+  const { passphrase } = req.body;
+  if (passphrase === process.env.AUTH_PASSPHRASE) {
+    res.json({ valid: true });
+  } else {
+    res.json({ valid: false });
+  }
 };
 
 module.exports = {
   getAuthUrl,
   handleCallback,
-  getStatus
+  getStatus,
+  getPrivacyStatus,
+  verifyPassphrase
 };

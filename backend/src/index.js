@@ -31,7 +31,7 @@ const io = initGateway(server);
 initSnapshotJob(io);
 
 // Initialize Fyers WebSocket if token exists
-const token = tokenStore.getAccessToken();
+const token = tokenStore.getAccessToken() || process.env.FYERS_ACCESS_TOKEN;
 if (token) {
   try {
     initWebSocket(io);
