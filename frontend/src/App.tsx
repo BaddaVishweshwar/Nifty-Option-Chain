@@ -11,7 +11,8 @@ import { Lock } from 'lucide-react';
 
 function App() {
   const [isLocked, setIsLocked] = useState(false);
-  const [passphrase, setPassphrase] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [checking, setChecking] = useState(true);
 
@@ -51,10 +52,10 @@ function App() {
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch(`${API_URL}/auth/verify-passphrase`, {
+    const res = await fetch(`${API_URL}/auth/verify-credentials`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ passphrase })
+      body: JSON.stringify({ email, password })
     });
     const data = await res.json();
     if (data.valid) {
@@ -62,7 +63,7 @@ function App() {
       setIsLocked(false);
       setError('');
     } else {
-      setError('Invalid passphrase');
+      setError('Invalid email or password');
     }
   };
 
@@ -77,24 +78,31 @@ function App() {
               <Lock className="w-8 h-8 text-blue-500" />
             </div>
             <h1 className="text-2xl font-bold italic">NiftyDash Private</h1>
-            <p className="text-zinc-500 text-sm text-center">This application is restricted. Please enter the passphrase to continue.</p>
+            <p className="text-zinc-500 text-sm text-center">This application is restricted. Please login to continue.</p>
           </div>
           
           <div className="space-y-4">
             <input 
-              type="password"
-              placeholder="Enter passphrase"
-              value={passphrase}
-              onChange={(e) => setPassphrase(e.target.value)}
-              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-mono"
+              type="email"
+              placeholder="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
               autoFocus
+            />
+            <input 
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
             />
             {error && <p className="text-red-400 text-xs text-center">{error}</p>}
             <button 
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-lg font-bold transition-all shadow-lg hover:shadow-blue-500/20"
             >
-              Verify & Access
+              Sign In
             </button>
           </div>
         </form>

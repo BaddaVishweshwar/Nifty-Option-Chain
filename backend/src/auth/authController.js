@@ -62,12 +62,12 @@ const getStatus = (req, res) => {
 };
 
 const getPrivacyStatus = (req, res) => {
-  res.json({ required: !!process.env.AUTH_PASSPHRASE });
+  res.json({ required: !!(process.env.APP_EMAIL && process.env.APP_PASSWORD) });
 };
 
-const verifyPassphrase = (req, res) => {
-  const { passphrase } = req.body;
-  if (passphrase === process.env.AUTH_PASSPHRASE) {
+const verifyCredentials = (req, res) => {
+  const { email, password } = req.body;
+  if (email === process.env.APP_EMAIL && password === process.env.APP_PASSWORD) {
     res.json({ valid: true });
   } else {
     res.json({ valid: false });
@@ -79,5 +79,5 @@ module.exports = {
   handleCallback,
   getStatus,
   getPrivacyStatus,
-  verifyPassphrase
+  verifyCredentials
 };
