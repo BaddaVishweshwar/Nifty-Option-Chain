@@ -5,7 +5,7 @@ import { ShieldCheck, ShieldAlert, ChevronDown } from 'lucide-react';
 import { API_URL } from '../../config';
 
 export const TopBar: React.FC = () => {
-  const { selectedSymbol, lastUpdate, connected, spotPrice, setSymbol } = useOptionChainStore();
+  const { selectedSymbol, lastUpdate, connected, spotPrice, setSymbol, setProvider } = useOptionChainStore();
   const [symbols, setSymbols] = useState<{ label: string, value: string }[]>([]);
   const [authenticated, setAuthenticated] = useState(false);
 
@@ -19,7 +19,10 @@ export const TopBar: React.FC = () => {
   useEffect(() => {
     fetch(`${API_URL}/auth/status`)
       .then(res => res.json())
-      .then(data => setAuthenticated(data.authenticated))
+      .then(data => {
+        setAuthenticated(data.authenticated);
+        if (data.provider) setProvider(data.provider);
+      })
       .catch(console.error);
   }, [connected]);
 

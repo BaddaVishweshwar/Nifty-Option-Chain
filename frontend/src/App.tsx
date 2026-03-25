@@ -30,6 +30,13 @@ function App() {
         }
         setChecking(false);
       });
+      
+    // Also sync provider status
+    fetch(`${API_URL}/auth/status`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.provider) useOptionChainStore.getState().setProvider(data.provider);
+      });
   }, []);
 
   useEffect(() => {
