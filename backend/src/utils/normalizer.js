@@ -5,15 +5,17 @@ const normalizeOptionsChain = (rawChain, spotPrice = 0, expiryDate = null) => {
   const riskFreeRate = 0.07;
   const dividendYield = 0.015;
   
-  // 1. Calculate time to expiry with 1-day floor for stability
-  let timeToExpiry = 1 / 365; 
+  // 1. Calculate time to expiry with a 1-hour floor for stability
+  let timeToExpiry = 1 / (24 * 365); 
   if (expiryDate) {
     const now = new Date();
     const expiry = new Date(expiryDate);
+    // 3:30 PM IST is 10:00 AM UTC
     expiry.setUTCHours(10, 0, 0, 0); 
     const diffMs = expiry.getTime() - now.getTime();
-    // Floor to 1 day (1/365) to avoid Theta/IV spikes on expiry day
-    timeToExpiry = Math.max(1 / 365, diffMs / (1000 * 60 * 60 * 24 * 365));
+    // Use 1 hour floor (to avoid div by zero/negatives right at the bell)
+    const minTime = 1 / (24 * 365);
+    timeToExpiry = Math.max(minTime, diffMs / (1000 * 60 * 60 * 24 * 365));
   }
 
   // First pass: Group by strike to find ATM

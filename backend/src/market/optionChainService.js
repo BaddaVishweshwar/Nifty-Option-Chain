@@ -50,57 +50,23 @@ const getOptionChain = async (symbol, strikecount = 10) => {
       const { normalizeOptionsChain } = require("../utils/normalizer");
       
       let expiryDate = null;
-      if (optionsChain && optionsChain.length > 0) {
-        // Find the first actual option symbol (skip the index symbol if present)
+      if (response.data.expiryData && response.data.expiryData.length > 0) {
+        // Fyers v3 provides native expiry list. Use the first one (closest)
+        const dateStr = response.data.expiryData[0].date; // Format "DD-MM-YYYY"
+        if (dateStr) {
+          const parts = dateStr.split('-');
+          if (parts.length === 3) {
+            expiryDate = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+            console.log(`[Expiry] Using native Fyers expiry: ${dateStr}`);
+          }
+        }
+      }
+
+      if (!expiryDate && optionsChain && optionsChain.length > 0) {
+        // Fallback to regex parsing if native field is missing
         const optionItem = optionsChain.find(item => 
           item.symbol.includes("CE") || item.symbol.includes("PE")
         );
-        
-        if (optionItem) {
-          const fullSymbol = optionItem.symbol.replace("NSE:", "").replace("BSE:", "");
-          
-          // Fyers v3 date part is usually after the name and before the strike
-          // regex to find 26MAR or 26326
-          const dateMatch = fullSymbol.match(/[A-Z]+(\d{2}[A-Z]{3}|\d{5})/);
-          if (dateMatch) {
-            const datePart = dateMatch[1];
-            console.log(`[Debug] Date Part found: ${datePart} from ${fullSymbol}`);
-            
-            if (datePart.length === 5 && !isNaN(datePart)) {
-              // Weekly: YYMDD
-              const year = "20" + datePart.substring(0, 2);
-              const monthCode = datePart.substring(2, 3);
-              const day = parseInt(datePart.substring(3, 5));
-              const monthsMap = { "1": 0, "2": 1, "3": 2, "4": 3, "5": 4, "6": 5, "7": 6, "8": 7, "9": 8, "O": 9, "N": 10, "D": 11 };
-              const month = monthsMap[monthCode];
-              if (month !== undefined && !isNaN(day)) {
-                expiryDate = new Date(parseInt(year), month, day);
-              }
-            } else if (datePart.length === 5) {
-              // Monthly: YYMMM
-              const year = "20" + datePart.substring(0, 2);
-              const monthStr = datePart.substring(2, 5);
-              const monthsMap = { JAN: 0, FEB: 1, MAR: 2, APR: 3, MAY: 4, JUN: 5, JUL: 6, AUG: 7, SEP: 8, OCT: 9, NOV: 10, DEC: 11 };
-              const month = monthsMap[monthStr];
-              if (month !== undefined) {
-                const lastDay = new Date(parseInt(year), month + 1, 0);
-                let lastThursday = lastDay.getDate();
-                while (new Date(parseInt(year), month, lastThursday).getDay() !== 4) {
-                   lastThursday--;
-                }
-                expiryDate = new Date(parseInt(year), month, lastThursday);
-              }
-            }
-          }
-        }
-        
-        if (!expiryDate) {
-          console.warn(`[Expiry] FAILED TO PARSE SYMBOL. Using fallback.`);
-          const fallback = new Date();
-          fallback.setDate(fallback.getDate() + ((4 + 7 - fallback.getDay()) % 7 || 7));
-          expiryDate = fallback;
-        }
-      }
 
       const normalizedChain = normalizeOptionsChain(optionsChain, spot, expiryDate);
       console.log(`[Greeks] Result: ${optionsChain ? optionsChain.length : 0} items. Expiry: ${expiryDate ? expiryDate.toISOString().split('T')[0] : 'None'}`);
