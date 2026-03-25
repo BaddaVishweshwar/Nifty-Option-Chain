@@ -27,8 +27,11 @@ const getUpstoxOptionChain = async (symbol, strikecount) => {
             throw new Error(`No option expiries found for ${instrumentKey}`);
         }
         
-        // Upstox v2/option/contract returns array of expiry strings like ["2024-03-28", ...]
-        const expiries = contractsRes.data.sort();
+        // Upstox v2/option/contract returns array of contract objects, we need to extract unique 'expiry' fields
+        const expiries = [...new Set(contractsRes.data.map(c => c.expiry))]
+            .filter(Boolean)
+            .sort((a, b) => new Date(a) - new Date(b));
+            
         const nearestExpiry = expiries[0];
         console.log(`[Upstox] Fetching chain for nearest expiry: ${nearestExpiry} (${instrumentKey})`);
 
