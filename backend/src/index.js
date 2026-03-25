@@ -30,19 +30,19 @@ const io = initGateway(server);
 // Initialize OI Snapshot Service
 initSnapshotJob(io);
 
-// Initialize Fyers WebSocket if token exists
-const token = tokenStore.getAccessToken() || process.env.FYERS_ACCESS_TOKEN;
+// Initialize Upstox WebSocket if token exists
+const token = tokenStore.getAccessToken();
 if (token) {
   try {
     initWebSocket(io);
   } catch (err) {
-    console.error("Failed to initialize WebSocket on startup:", err.message);
+    console.error("Failed to initialize Upstox WebSocket on startup:", err.message);
   }
 }
 
 // Daily token refresh alert at 8:30 AM IST
 cron.schedule("30 8 * * *", () => {
-  console.log("IMPORTANT: Refresh Fyers access token manually or via login flow.");
+  console.log("IMPORTANT: Refresh Upstox access token manually via login flow.");
 }, {
   timezone: "Asia/Kolkata"
 });
