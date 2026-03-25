@@ -35,7 +35,11 @@ function App() {
   useEffect(() => {
     if (isLocked || checking) return;
 
+    let isFetching = false;
+    
     const fetchChain = async () => {
+      if (isFetching) return; // skip if previous fetch still running
+      isFetching = true;
       try {
         const response = await fetch(`${API_URL}/market/chain/${selectedSymbol}?strikecount=15`);
         const data = await response.json();
@@ -44,11 +48,17 @@ function App() {
         }
       } catch (err) {
         console.error('Failed to fetch chain:', err);
+      } finally {
+        isFetching = false;
       }
     };
 
-    fetchChain();
+    fetchChain(); // initial fetch immediately
+    const interval = setInterval(fetchChain, 1000); // then every 1 second
+
+    return () => clearInterval(interval);
   }, [selectedSymbol, setChainSnapshot, isLocked, checking]);
+
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
