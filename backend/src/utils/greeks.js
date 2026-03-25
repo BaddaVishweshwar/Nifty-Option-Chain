@@ -74,38 +74,41 @@ function calculateIV(type, S, K, t, r, marketPrice, q = 0) {
  * Calculates Greeks using Black-Scholes model including dividend yield (q)
  */
 function calculateGreeks(type, S, K, t, r, v, q = 0) {
-    if (t <= 0) t = 0.00001; 
-    if (v <= 0) v = 0.01;
+    // Use a stable t for Greeks calculation to avoid expiry spikes in display
+    const stableT = Math.max(1 / 365, t);
 
-    const d1 = (Math.log(S / K) + (r - q + (v * v) / 2) * t) / (v * Math.sqrt(t));
-    const d2 = d1 - v * Math.sqrt(t);
+    const d1_stable = (Math.log(S / K) + (r - q + (v * v) / 2) * stableT) / (v * Math.sqrt(stableT));
+    const d2_stable = d1_stable - v * Math.sqrt(stableT);
 
-    const n_d1 = nd(d1);
-    const N_d1 = cnd(d1);
-    const N_d2 = cnd(d2);
+    const n_d1 = nd(d1_stable);
+    const N_d1 = cnd(d1_stable);
+    const N_d2 = cnd(d2_stable);
 
     let delta, theta, gamma, vega;
 
-    gamma = (n_d1 * Math.exp(-q * t)) / (S * v * Math.sqrt(t));
-    vega = (S * Math.exp(-q * t) * n_d1 * Math.sqrt(t)) / 100;
+    // Gamma per 100 points move
+    gamma = ((n_d1 * Math.exp(-q * stableT)) / (S * v * Math.sqrt(stableT))) * 100;
+    
+    // Vega per 1% IV change
+    vega = (S * Math.exp(-q * stableT) * n_d1 * Math.sqrt(stableT)) / 100;
 
     if (type === 'CE') {
-        delta = Math.exp(-q * t) * N_d1;
-        theta = (-(S * v * Math.exp(-q * t) * n_d1) / (2 * Math.sqrt(t)) 
-                 + q * S * Math.exp(-q * t) * N_d1 
-                 - r * K * Math.exp(-r * t) * N_d2) / 365;
+        delta = Math.exp(-q * t) * cnd((Math.log(S / K) + (r - q + (v * v) / 2) * t) / (v * Math.sqrt(t))); // Real-time Delta
+        theta = (-(S * v * Math.exp(-q * stableT) * n_d1) / (2 * Math.sqrt(stableT)) 
+                 + q * S * Math.exp(-q * stableT) * N_d1 
+                 - r * K * Math.exp(-r * stableT) * N_d2) / 365;
     } else {
-        delta = Math.exp(-q * t) * (N_d1 - 1);
-        theta = (-(S * v * Math.exp(-q * t) * n_d1) / (2 * Math.sqrt(t)) 
-                 - q * S * Math.exp(-q * t) * (1 - N_d1) 
-                 + r * K * Math.exp(-r * t) * (1 - N_d2)) / 365;
+        delta = Math.exp(-q * t) * (cnd((Math.log(S / K) + (r - q + (v * v) / 2) * t) / (v * Math.sqrt(t))) - 1); // Real-time Delta
+        theta = (-(S * v * Math.exp(-q * stableT) * n_d1) / (2 * Math.sqrt(stableT)) 
+                 - q * S * Math.exp(-q * stableT) * (1 - N_d1) 
+                 + r * K * Math.exp(-r * stableT) * (1 - N_d2)) / 365;
     }
 
     return {
-        delta: parseFloat(delta.toFixed(4)),
-        gamma: parseFloat(gamma.toFixed(6)),
-        theta: parseFloat(theta.toFixed(4)),
-        vega: parseFloat(vega.toFixed(4)),
+        delta: parseFloat(delta.toFixed(3)),
+        gamma: parseFloat(gamma.toFixed(4)),
+        theta: parseFloat(theta.toFixed(2)),
+        vega: parseFloat(vega.toFixed(2)),
         iv: v * 100 
     };
 }
