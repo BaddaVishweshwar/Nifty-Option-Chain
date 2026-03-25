@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useOptionChainStore } from '../../store/optionChainStore';
-import { ShieldCheck, ShieldAlert, ChevronDown } from 'lucide-react';
+import { ShieldCheck, ShieldAlert, ChevronDown, LogIn, LogOut } from 'lucide-react';
 import { API_URL } from '../../config';
 
 export const TopBar: React.FC = () => {
@@ -38,6 +38,13 @@ export const TopBar: React.FC = () => {
     if (data.url) window.location.href = data.url;
   };
 
+  const handleLogout = async () => {
+    await fetch(`${API_URL}/auth/logout`, { method: 'POST' });
+    window.location.reload();
+  };
+
+  const provider = useOptionChainStore(state => state.provider);
+
   return (
     <header className="flex items-center justify-between px-6 py-3 bg-zinc-900 border-b border-zinc-800 text-zinc-100">
       <div className="flex items-center gap-6">
@@ -65,24 +72,38 @@ export const TopBar: React.FC = () => {
           </div>
         </div>
       </div>
-
       <div className="flex items-center gap-6">
-        {!authenticated && (
-          <div className="flex items-center gap-2">
-            <button 
-              onClick={handleLogin}
-              className="px-3 py-1.5 bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 text-[10px] font-bold uppercase tracking-wider border border-blue-500/30 rounded-lg transition-all"
-            >
-              Fyers Login
-            </button>
-            <button 
-              onClick={handleUpstoxLogin}
-              className="px-3 py-1.5 bg-orange-600/10 hover:bg-orange-600/20 text-orange-400 text-[10px] font-bold uppercase tracking-wider border border-orange-500/30 rounded-lg transition-all"
-            >
-              Upstox Login
-            </button>
-          </div>
-        )}
+        <div className="flex items-center gap-4 border-l border-zinc-800 pl-6 mr-4">
+          {authenticated ? (
+            <div className="flex items-center gap-3 bg-zinc-800/50 px-3 py-1.5 rounded-full border border-zinc-700/50">
+                <span className={`text-[10px] font-black uppercase tracking-widest ${provider === 'upstox' ? 'text-orange-400' : 'text-blue-400'}`}>
+                    {provider} Active
+                </span>
+                <button 
+                    onClick={handleLogout}
+                    title="Logout / Switch Account"
+                    className="p-1 hover:bg-zinc-700 rounded-full text-zinc-500 hover:text-red-400 transition-all"
+                >
+                    <LogOut className="w-3.5 h-3.5" />
+                </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={handleLogin}
+                className="px-3 py-1.5 bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 text-[10px] font-bold uppercase tracking-wider border border-blue-500/30 rounded-lg transition-all flex items-center gap-2"
+              >
+                <LogIn className="w-3 h-3" /> Fyers
+              </button>
+              <button 
+                onClick={handleUpstoxLogin}
+                className="px-3 py-1.5 bg-orange-600/10 hover:bg-orange-600/20 text-orange-400 text-[10px] font-bold uppercase tracking-wider border border-orange-500/30 rounded-lg transition-all flex items-center gap-2"
+              >
+                <LogIn className="w-3 h-3" /> Upstox
+              </button>
+            </div>
+          )}
+        </div>
         <div className="flex flex-col items-end">
           <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider">Last Update</span>
           <span className="text-xs font-mono text-zinc-400">
