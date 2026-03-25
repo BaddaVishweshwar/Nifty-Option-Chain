@@ -51,24 +51,24 @@ class UpstoxClient {
 
     async getOptionChain(instrumentKey, expiryDate) {
         // v2 option chain endpoint
-        return this.request('GET', `/option/chain?instrument_key=${instrumentKey}&expiry_date=${expiryDate}`);
+        return this.request('GET', '/option/chain', 'v2', { instrument_key: instrumentKey, expiry_date: expiryDate });
     }
 
     async getOptionContracts(instrumentKey) {
         // v2 option contracts endpoint to get expiries
-        return this.request('GET', `/option/contract?instrument_key=${instrumentKey}`);
+        return this.request('GET', '/option/contract', 'v2', { instrument_key: instrumentKey });
     }
 
     async getMarketQuote(instrumentKeys) {
-        return this.request('GET', `/market-quote/quotes?instrument_key=${instrumentKeys.join(',')}`);
+        return this.request('GET', '/market-quote/quotes', 'v2', { instrument_key: instrumentKeys.join(',') });
     }
 
     async getOptionGreeks(instrumentKeys) {
         // v3 market-quote/option-greek endpoint
-        return this.request('GET', `/market-quote/option-greek?instrument_key=${instrumentKeys.join(',')}`, 'v3');
+        return this.request('GET', '/market-quote/option-greek', 'v3', { instrument_key: instrumentKeys.join(',') });
     }
 
-    async request(method, endpoint, version = 'v2') {
+    async request(method, endpoint, version = 'v2', params = {}) {
         if (!this.accessToken) throw new Error('Not authenticated with Upstox');
 
         const url = `https://api.upstox.com/${version}${endpoint}`;
@@ -76,6 +76,7 @@ class UpstoxClient {
             const response = await axios({
                 method,
                 url,
+                params,
                 headers: {
                     'Authorization': `Bearer ${this.accessToken}`,
                     'Accept': 'application/json'
