@@ -16,4 +16,17 @@ router.get('/chain/:symbol', async (req, res) => {
   }
 });
 
+router.get('/debug-contracts', async (req, res) => {
+    try {
+        const symbol = req.query.symbol || 'NSE_INDEX|Nifty Bank';
+        const upstox = require('../market/upstoxClient').getUpstoxModel();
+        const token = require('../auth/tokenStore').getAccessToken();
+        if (token) upstox.setAccessToken(token);
+        const contractsRes = await upstox.getOptionContracts(symbol);
+        res.json(contractsRes);
+    } catch (error) {
+        res.status(500).json({ error: error.message, stack: error.stack });
+    }
+});
+
 module.exports = router;
