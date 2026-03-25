@@ -80,6 +80,10 @@ const handleUpstoxCallback = async (req, res) => {
         res.status(500).send("Upstox Auth failed");
     }
 };
+    async logout(req, res) {
+        tokenStore.clear();
+        res.json({ success: true, message: "Logged out from all providers" });
+    },
 
 const getStatus = (req, res) => {
   const token = tokenStore.getAccessToken();

@@ -9,6 +9,7 @@ router.get('/upstox/login', authController.getUpstoxAuthUrl);
 router.get('/upstox/callback', authController.handleUpstoxCallback);
 
 router.get('/status', authController.getStatus);
+router.post('/logout', authController.logout);
 router.get('/privacy-status', authController.getPrivacyStatus);
 router.post('/verify-credentials', authController.verifyCredentials);
 

@@ -26,5 +26,8 @@ module.exports = {
   getAccessToken,
   setAccessToken,
   getProvider,
-  setProvider
+  setProvider,
+  clear: () => {
+      db.prepare("DELETE FROM config WHERE key IN ('access_token', 'auth_provider')").run();
+  }
 };

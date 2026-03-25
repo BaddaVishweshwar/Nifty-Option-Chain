@@ -64,8 +64,17 @@ const getUpstoxOptionChain = async (symbol, strikecount) => {
             const peGreeks = v3GreeksMap[pe?.instrument_key] || pe?.option_greeks || {};
             
             // Correct IV extraction (v3 greeks have iv at root of the object in map)
-            const ceIv = ceGreeks.iv !== undefined ? ceGreeks.iv : (ce?.option_greeks?.iv || 0);
-            const peIv = peGreeks.iv !== undefined ? peGreeks.iv : (pe?.option_greeks?.iv || 0);
+            // Upstox v3 IV is usually decimal (0.28), but we want percentage (28.0)
+            const extractIv = (greekObj, fallbackObj) => {
+                const val = greekObj.iv !== undefined ? greekObj.iv : (fallbackObj?.option_greeks?.iv || 0);
+                return val > 1 ? val : val * 100;
+            };
+            const ceIv = extractIv(ceGreeks, ce);
+            const peIv = extractIv(peGreeks, pe);
+
+            // Upstox v3 Theta appears to be annualized in some contexts or raw points.
+            // If Theta > 200, it's definitely annual. 
+            const normalizeTheta = (val) => Math.abs(val) > 200 ? val / 365 : val;
 
             return {
                 strike: item.strike_price,
@@ -74,9 +83,9 @@ const getUpstoxOptionChain = async (symbol, strikecount) => {
                     ltp: ce?.market_data?.last_price || 0,
                     oi: ce?.market_data?.oi || 0,
                     oiChange: 0,
-                    iv: ceIv * 100,
+                    iv: ceIv,
                     delta: ceGreeks.delta || 0,
-                    theta: ceGreeks.theta || 0,
+                    theta: normalizeTheta(ceGreeks.theta || 0),
                     gamma: (ceGreeks.gamma || 0) * 100,
                     vega: ceGreeks.vega || 0
                 },
@@ -85,9 +94,9 @@ const getUpstoxOptionChain = async (symbol, strikecount) => {
                     ltp: pe?.market_data?.last_price || 0,
                     oi: pe?.market_data?.oi || 0,
                     oiChange: 0,
-                    iv: peIv * 100,
+                    iv: peIv,
                     delta: peGreeks.delta || 0,
-                    theta: peGreeks.theta || 0,
+                    theta: normalizeTheta(peGreeks.theta || 0),
                     gamma: (peGreeks.gamma || 0) * 100,
                     vega: peGreeks.vega || 0
                 }
