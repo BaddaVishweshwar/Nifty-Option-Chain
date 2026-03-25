@@ -1,69 +1,55 @@
 syntax = "proto3";
 
-package com.upstox.marketdata.model.v2;
+package com.upstox.marketdata.model.v3;
+
+message FeedRequest {
+    string guid = 1;
+    string method = 2;
+    FeedRequestData data = 3;
+}
+
+message FeedRequestData {
+    string mode = 1;
+    repeated string instrumentKeys = 2;
+}
 
 message MarketDataFeed {
-  map<string, MarketFullData> data = 1;
+    map<string, MarketData> data = 1;
 }
 
-message MarketFullData {
-  optional LTP ltp = 1;
-  optional MarketLevel market_level = 2;
-  optional OHLC ohlc = 3;
-  optional MarketFullDetails market_full_details = 4;
-  optional OptionGreeks option_greeks = 5;
-  optional ExtendedFeed extended_feed = 6;
-  optional double iv = 7;
+message MarketData {
+    LTPC ltpc = 1;
+    MarketFullDetails full_details = 2;
+    OptionGreeks option_greeks = 3;
+    ExtendedFeed extended_feed = 4;
 }
 
-message LTP {
-  double last_price = 1;
-  int64 ltt = 2; // Last trade time
-  int64 ltq = 3; // Last trade quantity
-}
-
-message MarketLevel {
-  repeated Quote bid = 1;
-  repeated Quote ask = 2;
-}
-
-message Quote {
-  int32 quantity = 1;
-  double price = 2;
-  int32 orders = 3;
-}
-
-message OHLC {
-  double open = 1;
-  double high = 2;
-  double low = 3;
-  double close = 4;
+message LTPC {
+    double last_price = 1;
+    int64 last_time = 2;
+    double last_quantity = 3;
+    double cp = 4;
 }
 
 message MarketFullDetails {
-  double last_price = 1;
-  int64 last_trade_time = 2;
-  double vtt = 3; // Volume Traded Today
-  double avg_price = 4;
-  double prev_close = 5;
-  double oi = 6;
-  double oich = 7;
-  double low_circuit = 8;
-  double upper_circuit = 9;
+    double last_price = 1;
+    int64 last_time = 2;
+    double last_quantity = 3;
+    double cp = 4;
+    int64 oi = 5;
+    int64 oich = 6;
 }
 
 message OptionGreeks {
-  double iv = 1;
-  double delta = 2;
-  double theta = 3;
-  double gamma = 4;
-  double vega = 5;
+    double delta = 1;
+    double theta = 2;
+    double gamma = 3;
+    double vega = 4;
+    double iv = 5;
 }
 
 message ExtendedFeed {
-  double atp = 1;
-  double cp = 2;
-  double vtt = 3;
-  double oi = 4;
-  double oich = 5;
+    double last_price = 1;
+    int64 oi = 2;
+    int64 oich = 3;
 }

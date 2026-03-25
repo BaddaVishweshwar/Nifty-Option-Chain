@@ -9,12 +9,14 @@ require('dotenv').config();
 let socket = null;
 let io = null;
 let upstoxProto = null;
+let FeedRequest = null;
 
 const loadProto = async () => {
-    if (upstoxProto) return upstoxProto;
+    if (upstoxProto) return { MarketDataFeed: upstoxProto, FeedRequest };
     const root = await protobuf.load(path.join(__dirname, "upstox-market-data.proto"));
-    upstoxProto = root.lookupType("com.upstox.marketdata.model.v2.MarketDataFeed");
-    return upstoxProto;
+    upstoxProto = root.lookupType("com.upstox.marketdata.model.v3.MarketDataFeed");
+    FeedRequest = root.lookupType("com.upstox.marketdata.model.v3.FeedRequest");
+    return { MarketDataFeed: upstoxProto, FeedRequest };
 };
 
 const closeSocket = () => {
@@ -39,36 +41,43 @@ const initWebSocket = async (socketIoInstance) => {
     initUpstoxWS(token);
 };
 
-
-
 const initUpstoxWS = async (token) => {
     try {
-        const protoType = await loadProto();
+        const { MarketDataFeed: protoType } = await loadProto();
         
-        // 1. Authorize Market Data Feed
-        const authRes = await axios.get("https://api.upstox.com/v2/feed/market-data-feed/authorize", {
+        // 1. Authorize Market Data Feed (v3)
+        const authRes = await axios.get("https://api.upstox.com/v3/feed/market-data-feed/authorize", {
             headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
         });
 
         const wsUrl = authRes.data.data.authorized_redirect_uri;
+        console.log("[Upstox v3] Authorized WS URL obtained");
         socket = new WebSocket(wsUrl, { followRedirects: true });
 
         socket.on("open", () => {
-            console.log("Upstox WebSocket connected");
+            console.log("Upstox v3 WebSocket connected");
             if (io) io.emit("connection_status", { connected: true });
+            
+            // Re-subscribe if we have active symbols
+            // (The gateway handles this via 'subscribe' messages usually)
         });
 
         socket.on("message", (data) => {
             try {
+                // Ignore non-binary messages (like 'ready')
+                if (typeof data === 'string') return;
+
                 const decoded = protoType.decode(data);
                 const result = protoType.toObject(decoded, { longs: String, enums: String, bytes: String });
                 
+                if (!result.data) return;
+
                 const ticks = Object.entries(result.data).map(([symbol, detail]) => {
-                    const greeks = detail.optionGreeks || {};
-                    const details = detail.marketFullDetails || detail.extendedFeed || {};
-                    const ltp = detail.ltp?.lastPrice || details.last_price || 0;
+                    const greeks = detail.option_greeks || detail.optionGreeks || {};
+                    const details = detail.full_details || detail.marketFullDetails || detail.extended_feed || detail.extendedFeed || {};
+                    const ltp = detail.ltpc?.last_price || details.last_price || 0;
                     
-                    const ivRaw = (detail.iv !== undefined) ? detail.iv : (greeks.iv || 0);
+                    const ivRaw = (greeks.iv !== undefined) ? greeks.iv : 0;
                     const iv = ivRaw > 1 ? ivRaw : ivRaw * 100;
                     const normalizeTheta = (val) => Math.abs(val) > 200 ? val / 365 : val;
 
@@ -89,24 +98,26 @@ const initUpstoxWS = async (token) => {
 
                 if (io) io.emit("tick_update", ticks);
             } catch (err) {
-                console.error("Upstox Protobuf Decode Error:", err);
+                console.error("Upstox Protobuf Decode Error:", err.message);
             }
         });
 
-        socket.on("error", (err) => console.error("Upstox WS Error:", err));
+        socket.on("error", (err) => console.error("Upstox v3 WS Error:", err));
         socket.on("close", () => {
-            console.log("Upstox WS Closed");
+            console.log("Upstox v3 WS Closed");
             if (io) io.emit("connection_status", { connected: false });
         });
 
     } catch (err) {
-        console.error("Upstox WS Init Error:", err);
+        console.error("Upstox v3 WS Init Error:", err.response?.data || err.message);
     }
 };
 
-const subscribeSymbols = (symbols) => {
+const subscribeSymbols = async (symbols) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
-        // Map common keys to Upstox specific instrument keys for subscription
+        const { FeedRequest: RequestProto } = await loadProto();
+        
+        // Map common keys to Upstox specific instrument keys
         const symbolMap = {
             "NSE:NIFTY50-INDEX": "NSE_INDEX|Nifty 50",
             "NSE:NIFTYBANK-INDEX": "NSE_INDEX|Nifty Bank",
@@ -115,23 +126,34 @@ const subscribeSymbols = (symbols) => {
         };
         const mappedSymbols = symbols.map(s => symbolMap[s] || s);
 
-        const request = {
-            guid: "guid",
+        const payload = {
+            guid: "guid_" + Date.now(),
             method: "sub",
             data: { mode: "full", instrumentKeys: mappedSymbols }
         };
-        socket.send(JSON.stringify(request));
+
+        // v3 requires BINARY FeedRequest
+        const errMsg = RequestProto.verify(payload);
+        if (errMsg) throw Error(errMsg);
+
+        const buffer = RequestProto.encode(RequestProto.create(payload)).finish();
+        socket.send(buffer);
+        console.log(`[Upstox v3] Sent binary subscription for ${mappedSymbols.length} symbols`);
     }
 };
 
-const unsubscribeSymbols = (symbols) => {
+const unsubscribeSymbols = async (symbols) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
-        const request = {
-            guid: "guid",
+        const { FeedRequest: RequestProto } = await loadProto();
+        
+        const payload = {
+            guid: "guid_" + Date.now(),
             method: "unsub",
             data: { mode: "full", instrumentKeys: symbols }
         };
-        socket.send(JSON.stringify(request));
+
+        const buffer = RequestProto.encode(RequestProto.create(payload)).finish();
+        socket.send(buffer);
     }
 };
 
