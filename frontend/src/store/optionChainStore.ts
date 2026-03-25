@@ -84,13 +84,15 @@ export const useOptionChainStore = create<OptionChainState>((set) => ({
     let newSpot = state.spotPrice;
     let spotChanged = false;
 
-    // Recalculate timeToExpiry if we have an expiry date
+    // Sync parameters with backend
     const riskFreeRate = 0.07;
-    let t = 0.00001;
+    const q = 0;
+    let t = 1 / (24 * 365); // 1 hour floor
     if (state.selectedExpiry) {
         const now = new Date();
         const expiry = new Date(state.selectedExpiry);
-        expiry.setHours(15, 30, 0, 0);
+        // Match backend UTC 10:00 (3:30 PM IST)
+        expiry.setUTCHours(10, 0, 0, 0); 
         const diffMs = expiry.getTime() - now.getTime();
         t = Math.max(1 / (24 * 365), diffMs / (1000 * 60 * 60 * 24 * 365));
     }
@@ -113,14 +115,11 @@ export const useOptionChainStore = create<OptionChainState>((set) => ({
         if (tick.oich !== undefined) leg.oiChange = tick.oich;
         if (tick.iv !== undefined) leg.iv = tick.iv;
 
-        // Recalculate Greeks for this specific leg update
+        // Use Synthetic Spot for Greeks if available (spotChanged will refresh all anyway)
         if (newSpot > 0 && t > 0) {
             const vol = (leg.iv > 0 ? leg.iv : 15.0) / 100;
-            const greeks = calculateGreeks(isCE ? "CE" : "PE", newSpot, strike.strike, t, riskFreeRate, vol);
-            leg.delta = greeks.delta;
-            leg.theta = greeks.theta;
-            leg.gamma = greeks.gamma;
-            leg.vega = greeks.vega;
+            const greeks = calculateGreeks(isCE ? "CE" : "PE", newSpot, strike.strike, t, riskFreeRate, vol, q);
+            Object.assign(leg, greeks);
         }
 
         if (isCE) strike.ce = leg; else strike.pe = leg;
@@ -128,19 +127,19 @@ export const useOptionChainStore = create<OptionChainState>((set) => ({
       }
     });
 
-    // If spot changed, we MUST update ALL Greeks for ALL strikes
+    // If spot changed, refresh all Greeks for consistency
     if (spotChanged && newChain.length > 0 && t > 0) {
       newChain.forEach((strike, idx) => {
         const updatedStrike = { ...strike };
         
         // Update CE
         const ceVol = (strike.ce.iv > 0 ? strike.ce.iv : 15.0) / 100;
-        const ceGreeks = calculateGreeks("CE", newSpot, strike.strike, t, riskFreeRate, ceVol);
+        const ceGreeks = calculateGreeks("CE", newSpot, strike.strike, t, riskFreeRate, ceVol, q);
         updatedStrike.ce = { ...strike.ce, ...ceGreeks };
 
         // Update PE
         const peVol = (strike.pe.iv > 0 ? strike.pe.iv : 15.0) / 100;
-        const peGreeks = calculateGreeks("PE", newSpot, strike.strike, t, riskFreeRate, peVol);
+        const peGreeks = calculateGreeks("PE", newSpot, strike.strike, t, riskFreeRate, peVol, q);
         updatedStrike.pe = { ...strike.pe, ...peGreeks };
 
         newChain[idx] = updatedStrike;
