@@ -3,7 +3,7 @@ const { calculateGreeks, calculateIV } = require("./greeks");
 const normalizeOptionsChain = (rawChain, spotPrice = 0, expiryDate = null) => {
   const strikesMap = new Map();
   const riskFreeRate = 0.07;
-  const dividendYield = 0.015;
+  const dividendYield = 0;
   
   // 1. Calculate time to expiry with a 1-hour floor for stability
   let timeToExpiry = 1 / (24 * 365); 
