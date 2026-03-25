@@ -102,8 +102,9 @@ const getUpstoxOptionChain = async (symbol, strikecount) => {
         };
 
     } catch (error) {
-        console.error("Upstox Chain Error:", error);
-        throw error;
+        const detail = error.response ? JSON.stringify(error.response.data) : error.message;
+        console.error("Upstox Chain Error Detail:", detail);
+        throw new Error(`Upstox API Error: ${detail}`);
     }
 };
 
