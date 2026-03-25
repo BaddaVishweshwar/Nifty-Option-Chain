@@ -54,6 +54,11 @@ class UpstoxClient {
         return this.request('GET', `/option/chain?instrument_key=${instrumentKey}&expiry_date=${expiryDate}`);
     }
 
+    async getOptionContracts(instrumentKey) {
+        // v2 option contracts endpoint to get expiries
+        return this.request('GET', `/option/contract?instrument_key=${instrumentKey}`);
+    }
+
     async getMarketQuote(instrumentKeys) {
         return this.request('GET', `/market-quote/quotes?instrument_key=${instrumentKeys.join(',')}`);
     }

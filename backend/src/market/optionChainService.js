@@ -21,9 +21,20 @@ const getUpstoxOptionChain = async (symbol, strikecount) => {
         };
         const instrumentKey = symbolMap[symbol] || symbol;
 
-        // 1. Fetch Chain (v2)
-        const fullChainResponse = await upstox.getOptionChain(instrumentKey, '');
-        if (fullChainResponse.status !== 'success') throw new Error("Failed to fetch Upstox chain");
+        // 1. Get available expiries
+        const contractsRes = await upstox.getOptionContracts(instrumentKey);
+        if (contractsRes.status !== 'success' || !contractsRes.data || contractsRes.data.length === 0) {
+            throw new Error(`No option expiries found for ${instrumentKey}`);
+        }
+        
+        // Upstox v2/option/contract returns array of expiry strings like ["2024-03-28", ...]
+        const expiries = contractsRes.data.sort();
+        const nearestExpiry = expiries[0];
+        console.log(`[Upstox] Fetching chain for nearest expiry: ${nearestExpiry} (${instrumentKey})`);
+
+        // 2. Fetch Chain (v2)
+        const fullChainResponse = await upstox.getOptionChain(instrumentKey, nearestExpiry);
+        if (fullChainResponse.status !== 'success') throw new Error(`Upstox API Error: ${JSON.stringify(fullChainResponse)}`);
         const rawData = fullChainResponse.data;
 
         // 2. Fetch High-Precision Greeks (v3) for all symbols in the chain
