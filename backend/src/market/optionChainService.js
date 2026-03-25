@@ -67,6 +67,23 @@ const getOptionChain = async (symbol, strikecount = 10) => {
         const optionItem = optionsChain.find(item => 
           item.symbol.includes("CE") || item.symbol.includes("PE")
         );
+        
+        if (optionItem) {
+          const fullSymbol = optionItem.symbol.replace("NSE:", "").replace("BSE:", "");
+          const dateMatch = fullSymbol.match(/[A-Z]+(\d{2}[A-Z]{3}|\d{5})/);
+          if (dateMatch) {
+            const datePart = dateMatch[1];
+            if (datePart.length === 5 && !isNaN(datePart)) {
+              const year = "20" + datePart.substring(0, 2);
+              const monthCode = datePart.substring(2, 3);
+              const day = parseInt(datePart.substring(3, 5));
+              const monthsMap = { "1": 0, "2": 1, "3": 2, "4": 3, "5": 4, "6": 5, "7": 6, "8": 7, "9": 8, "O": 9, "N": 10, "D": 11 };
+              const month = monthsMap[monthCode];
+              if (month !== undefined && !isNaN(day)) expiryDate = new Date(parseInt(year), month, day);
+            }
+          }
+        }
+      }
 
       const normalizedChain = normalizeOptionsChain(optionsChain, spot, expiryDate);
       console.log(`[Greeks] Result: ${optionsChain ? optionsChain.length : 0} items. Expiry: ${expiryDate ? expiryDate.toISOString().split('T')[0] : 'None'}`);
