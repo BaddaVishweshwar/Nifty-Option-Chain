@@ -1,15 +1,8 @@
-const { getFyersModel } = require("./fyersClient");
 const { getUpstoxModel } = require("./upstoxClient");
 const tokenStore = require("../auth/tokenStore");
 
 const getOptionChain = async (symbol, strikecount = 10) => {
-  const provider = tokenStore.getProvider();
-  
-  if (provider === 'upstox') {
-      return getUpstoxOptionChain(symbol, strikecount);
-  } else {
-      return getFyersOptionChain(symbol, strikecount);
-  }
+  return getUpstoxOptionChain(symbol, strikecount);
 };
 
 const getUpstoxOptionChain = async (symbol, strikecount) => {
@@ -114,67 +107,14 @@ const getUpstoxOptionChain = async (symbol, strikecount) => {
     }
 };
 
-const getFyersOptionChain = async (symbol, strikecount) => {
-  const fyersModel = getFyersModel();
-  const token = tokenStore.getAccessToken();
-  if (!token) throw new Error("Not authenticated");
-  fyersModel.setAccessToken(token);
-
-  try {
-    let response = await fyersModel.getOptionChain({
-      symbol,
-      strikecount,
-      timestamp: ""
-    });
-
-    if (response.s === "ok") {
-      let { underlyingLtp, underlying_ltp, optionsChain } = response.data;
-      let spot = underlyingLtp || underlying_ltp || 0;
-
-      const { normalizeOptionsChain } = require("../utils/normalizer");
-      
-      let expiryDate = null;
-      if (response.data.expiryData && response.data.expiryData.length > 0) {
-        const dateStr = response.data.expiryData[0].date;
-        if (dateStr) {
-          const parts = dateStr.split('-');
-          expiryDate = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
-        }
-      }
-
-      const normalizedChain = normalizeOptionsChain(optionsChain, spot, expiryDate);
-      return {
-        underlyingLtp: spot,
-        optionsChain: normalizedChain
-      };
-    } else {
-      throw new Error(response.message || "Failed to fetch Fyers chain");
-    }
-  } catch (error) {
-    console.error("Fyers Chain Error:", error);
-    throw error;
-  }
-};
 
 const getSymbols = (req, res) => {
-  const provider = tokenStore.getProvider();
-  let symbols = [];
-  
-  if (provider === 'upstox') {
-      symbols = [
-        { label: "NIFTY 50", value: "NSE:NIFTY50-INDEX" },
-        { label: "BANK NIFTY", value: "NSE:NIFTYBANK-INDEX" },
-        { label: "FIN NIFTY", value: "NSE:FINNIFTY-INDEX" },
-        { label: "SENSEX", value: "BSE:SENSEX-INDEX" }
-      ];
-  } else {
-      symbols = [
-        { label: "NIFTY 50", value: "NSE:NIFTY50-INDEX" },
-        { label: "BANK NIFTY", value: "NSE:NIFTYBANK-INDEX" },
-        { label: "FIN NIFTY", value: "NSE:FINNIFTY-INDEX" },
-        { label: "SENSEX", value: "BSE:SENSEX-INDEX" }
-      ];
-  }
+  const symbols = [
+    { label: "NIFTY 50", value: "NSE:NIFTY50-INDEX" },
+    { label: "BANK NIFTY", value: "NSE:NIFTYBANK-INDEX" },
+    { label: "FIN NIFTY", value: "NSE:FINNIFTY-INDEX" },
+    { label: "SENSEX", value: "BSE:SENSEX-INDEX" }
+  ];
   res.json(symbols);
 };
 

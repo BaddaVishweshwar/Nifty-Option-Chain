@@ -20,13 +20,6 @@ function App() {
   useMarketSocket();
 
   useEffect(() => {
-    // Immediate provider sync from URL to prevent race conditions during redirect
-    const params = new URLSearchParams(window.location.search);
-    const providerParam = params.get('provider');
-    if (providerParam === 'upstox' || providerParam === 'fyers') {
-      useOptionChainStore.getState().setProvider(providerParam as any);
-    }
-
     // Check if privacy lock is required
     fetch(`${API_URL}/auth/privacy-status`)
       .then(res => res.json())
@@ -36,13 +29,6 @@ function App() {
           if (!savedAuth) setIsLocked(true);
         }
         setChecking(false);
-      });
-      
-    // Also sync provider status
-    fetch(`${API_URL}/auth/status`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.provider) useOptionChainStore.getState().setProvider(data.provider);
       });
   }, []);
 

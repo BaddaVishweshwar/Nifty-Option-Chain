@@ -1,4 +1,3 @@
-const { fyersDataSocket } = require("fyers-api-v3");
 const tokenStore = require("../auth/tokenStore");
 const tickStore = require("./tickStore");
 const protobuf = require("protobufjs");
@@ -34,49 +33,13 @@ const initWebSocket = async (socketIoInstance) => {
     closeSocket();
     io = socketIoInstance;
     const token = tokenStore.getAccessToken();
-    const provider = tokenStore.getProvider();
 
     if (!token) return;
 
-    if (provider === 'upstox') {
-        initUpstoxWS(token);
-    } else {
-        initFyersWS(token);
-    }
+    initUpstoxWS(token);
 };
 
-const initFyersWS = (token) => {
-    try {
-        const { fyersDataSocket } = require("fyers-api-v3");
-        const fullToken = `${process.env.FYERS_CLIENT_ID}:${token}`;
-        socket = new fyersDataSocket(fullToken);
-        
-        socket.on("connect", () => {
-            console.log("Fyers WebSocket connected");
-            if (io) io.emit("connection_status", { connected: true });
-        });
 
-        socket.on("message", (ticks) => {
-            if (Array.isArray(ticks)) {
-                ticks.forEach(t => tickStore.setTick(t.symbol, t));
-                if (io) io.emit("tick_update", ticks);
-            } else if (ticks) {
-                tickStore.setTick(ticks.symbol, ticks);
-                if (io) io.emit("tick_update", [ticks]);
-            }
-        });
-
-        socket.on("error", (err) => console.error("Fyers WS Error:", err));
-        socket.on("close", () => {
-            console.log("Fyers WS Closed");
-            if (io) io.emit("connection_status", { connected: false });
-        });
-
-        socket.connect();
-    } catch (err) {
-        console.error("Fyers WS Init Error:", err);
-    }
-};
 
 const initUpstoxWS = async (token) => {
     try {
@@ -142,8 +105,7 @@ const initUpstoxWS = async (token) => {
 };
 
 const subscribeSymbols = (symbols) => {
-    const provider = tokenStore.getProvider();
-    if (provider === 'upstox' && socket && socket.readyState === WebSocket.OPEN) {
+    if (socket && socket.readyState === WebSocket.OPEN) {
         // Map common keys to Upstox specific instrument keys for subscription
         const symbolMap = {
             "NSE:NIFTY50-INDEX": "NSE_INDEX|Nifty 50",
@@ -159,23 +121,17 @@ const subscribeSymbols = (symbols) => {
             data: { mode: "full", instrumentKeys: mappedSymbols }
         };
         socket.send(JSON.stringify(request));
-    } else if (socket && socket.subscribe) {
-        socket.subscribe(symbols);
-        socket.mode(socket.mode.Full, symbols);
     }
 };
 
 const unsubscribeSymbols = (symbols) => {
-    const provider = tokenStore.getProvider();
-    if (provider === 'upstox' && socket && socket.readyState === WebSocket.OPEN) {
+    if (socket && socket.readyState === WebSocket.OPEN) {
         const request = {
             guid: "guid",
             method: "unsub",
             data: { mode: "full", instrumentKeys: symbols }
         };
         socket.send(JSON.stringify(request));
-    } else if (socket && socket.unsubscribe) {
-        socket.unsubscribe(symbols);
     }
 };
 

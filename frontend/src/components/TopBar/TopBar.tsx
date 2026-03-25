@@ -5,7 +5,7 @@ import { ShieldCheck, ShieldAlert, ChevronDown, LogIn, LogOut } from 'lucide-rea
 import { API_URL } from '../../config';
 
 export const TopBar: React.FC = () => {
-  const { selectedSymbol, lastUpdate, connected, spotPrice, setSymbol, setProvider } = useOptionChainStore();
+  const { selectedSymbol, lastUpdate, connected, spotPrice, setSymbol } = useOptionChainStore();
   const [symbols, setSymbols] = useState<{ label: string, value: string }[]>([]);
   const [authenticated, setAuthenticated] = useState(false);
 
@@ -21,16 +21,10 @@ export const TopBar: React.FC = () => {
       .then(res => res.json())
       .then(data => {
         setAuthenticated(data.authenticated);
-        if (data.provider) setProvider(data.provider);
       })
       .catch(console.error);
   }, [connected]);
 
-  const handleLogin = async () => {
-    const res = await fetch(`${API_URL}/auth/login`);
-    const data = await res.json();
-    if (data.url) window.location.href = data.url;
-  };
 
   const handleUpstoxLogin = async () => {
     const res = await fetch(`${API_URL}/auth/upstox/login`);
@@ -43,7 +37,6 @@ export const TopBar: React.FC = () => {
     window.location.reload();
   };
 
-  const provider = useOptionChainStore(state => state.provider);
 
   return (
     <header className="flex items-center justify-between px-6 py-3 bg-zinc-900 border-b border-zinc-800 text-zinc-100">
@@ -76,8 +69,8 @@ export const TopBar: React.FC = () => {
         <div className="flex items-center gap-4 border-l border-zinc-800 pl-6 mr-4">
           {authenticated ? (
             <div className="flex items-center gap-3 bg-zinc-800/50 px-3 py-1.5 rounded-full border border-zinc-700/50">
-                <span className={`text-[10px] font-black uppercase tracking-widest ${provider === 'upstox' ? 'text-orange-400' : 'text-blue-400'}`}>
-                    {provider} Active
+                <span className="text-[10px] font-black uppercase tracking-widest text-orange-400">
+                    Upstox Active
                 </span>
                 <button 
                     onClick={handleLogout}
@@ -89,12 +82,6 @@ export const TopBar: React.FC = () => {
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <button 
-                onClick={handleLogin}
-                className="px-3 py-1.5 bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 text-[10px] font-bold uppercase tracking-wider border border-blue-500/30 rounded-lg transition-all flex items-center gap-2"
-              >
-                <LogIn className="w-3 h-3" /> Fyers
-              </button>
               <button 
                 onClick={handleUpstoxLogin}
                 className="px-3 py-1.5 bg-orange-600/10 hover:bg-orange-600/20 text-orange-400 text-[10px] font-bold uppercase tracking-wider border border-orange-500/30 rounded-lg transition-all flex items-center gap-2"
