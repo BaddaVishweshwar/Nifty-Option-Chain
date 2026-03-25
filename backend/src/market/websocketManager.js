@@ -103,17 +103,20 @@ const initUpstoxWS = async (token) => {
                 const ticks = Object.entries(result.data).map(([symbol, detail]) => {
                     const greeks = detail.optionGreeks || {};
                     const details = detail.marketFullDetails || detail.extendedFeed || {};
-                    const ltp = detail.ltp?.lastPrice || details.lastPrice || 0;
-                    const iv = (detail.iv !== undefined) ? detail.iv : (greeks.iv || 0);
+                    const ltp = detail.ltp?.lastPrice || details.last_price || 0;
+                    
+                    const ivRaw = (detail.iv !== undefined) ? detail.iv : (greeks.iv || 0);
+                    const iv = ivRaw > 1 ? ivRaw : ivRaw * 100;
+                    const normalizeTheta = (val) => Math.abs(val) > 200 ? val / 365 : val;
 
                     const normalizedTick = {
                         symbol,
                         ltp,
                         oi: details.oi || 0,
                         oich: details.oich || 0,
-                        iv: iv * 100,
+                        iv: iv,
                         delta: greeks.delta || 0,
-                        theta: greeks.theta || 0,
+                        theta: normalizeTheta(greeks.theta || 0),
                         gamma: (greeks.gamma || 0) * 100,
                         vega: greeks.vega || 0
                     };
