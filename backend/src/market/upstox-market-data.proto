@@ -13,6 +13,7 @@ message MarketFullData {
   optional MarketFullDetails market_full_details = 4;
   optional OptionGreeks option_greeks = 5;
   optional ExtendedFeed extended_feed = 6;
+  optional double iv = 7;
 }
 
 message LTP {

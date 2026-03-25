@@ -28,30 +28,44 @@ const getUpstoxOptionChain = async (symbol, strikecount) => {
         };
         const instrumentKey = symbolMap[symbol] || symbol;
 
-        // 1. Get Expiry Dates
-        const metadata = await upstox.getMarketQuote([instrumentKey]);
-        // Upstox provides option chain directly via a specialized endpoint
-        // Let's use the /v2/option/chain endpoint which is better for full chain
-        
-        // Find closest expiry for index (usually fetched from quotes or metadata)
-        // For simplicity, we'll fetch the chain for the underlying
-        const fullChainResponse = await upstox.getOptionChain(instrumentKey, ''); // '' gets all or closest
-        
-        if (fullChainResponse.status !== 'success') {
-            throw new Error(fullChainResponse.errors?.[0]?.message || "Failed to fetch Upstox chain");
+        // 1. Fetch Chain (v2)
+        const fullChainResponse = await upstox.getOptionChain(instrumentKey, '');
+        if (fullChainResponse.status !== 'success') throw new Error("Failed to fetch Upstox chain");
+        const rawData = fullChainResponse.data;
+
+        // 2. Fetch High-Precision Greeks (v3) for all symbols in the chain
+        const allInstrumentKeys = [];
+        rawData.forEach(item => {
+            if (item.call_options?.instrument_key) allInstrumentKeys.push(item.call_options.instrument_key);
+            if (item.put_options?.instrument_key) allInstrumentKeys.push(item.put_options.instrument_key);
+        });
+
+        let v3GreeksMap = {};
+        if (allInstrumentKeys.length > 0) {
+            try {
+                // Upstox v3 endpoint for greeks
+                const greeksRes = await upstox.getOptionGreeks(allInstrumentKeys);
+                if (greeksRes.status === 'success') {
+                    v3GreeksMap = greeksRes.data;
+                }
+            } catch (err) {
+                console.warn("[Upstox v3] Failed to fetch precision greeks, falling back to v2 chain greeks:", err.message);
+            }
         }
 
-        const rawData = fullChainResponse.data;
-        // Upstox v2 option chain format: Array of strikes with call_options and put_options
-        // Each option object includes market_data and option_greeks
-        
         const spot = rawData[0]?.underlying_key ? (await upstox.getMarketQuote([instrumentKey])).data[instrumentKey].last_price : 0;
 
         const normalizedChain = rawData.map(item => {
             const ce = item.call_options;
             const pe = item.put_options;
-            const ceGreeks = ce?.option_greeks || {};
-            const peGreeks = pe?.option_greeks || {};
+            
+            // Priority: v3 Greeks > v2 Greeks (inside option object) > v2 Greeks (at root? no, v2 is inside)
+            const ceGreeks = v3GreeksMap[ce?.instrument_key] || ce?.option_greeks || {};
+            const peGreeks = v3GreeksMap[pe?.instrument_key] || pe?.option_greeks || {};
+            
+            // Correct IV extraction (v3 greeks have iv at root of the object in map)
+            const ceIv = ceGreeks.iv !== undefined ? ceGreeks.iv : (ce?.option_greeks?.iv || 0);
+            const peIv = peGreeks.iv !== undefined ? peGreeks.iv : (pe?.option_greeks?.iv || 0);
 
             return {
                 strike: item.strike_price,
@@ -59,8 +73,8 @@ const getUpstoxOptionChain = async (symbol, strikecount) => {
                     symbol: ce?.instrument_key || '',
                     ltp: ce?.market_data?.last_price || 0,
                     oi: ce?.market_data?.oi || 0,
-                    oiChange: 0, // Upstox v2 chain doesn't always show daily change here
-                    iv: (ceGreeks.iv || 0) * 100,
+                    oiChange: 0,
+                    iv: ceIv * 100,
                     delta: ceGreeks.delta || 0,
                     theta: ceGreeks.theta || 0,
                     gamma: (ceGreeks.gamma || 0) * 100,
@@ -71,7 +85,7 @@ const getUpstoxOptionChain = async (symbol, strikecount) => {
                     ltp: pe?.market_data?.last_price || 0,
                     oi: pe?.market_data?.oi || 0,
                     oiChange: 0,
-                    iv: (peGreeks.iv || 0) * 100,
+                    iv: peIv * 100,
                     delta: peGreeks.delta || 0,
                     theta: peGreeks.theta || 0,
                     gamma: (peGreeks.gamma || 0) * 100,

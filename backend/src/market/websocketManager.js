@@ -104,13 +104,14 @@ const initUpstoxWS = async (token) => {
                     const greeks = detail.optionGreeks || {};
                     const details = detail.marketFullDetails || detail.extendedFeed || {};
                     const ltp = detail.ltp?.lastPrice || details.lastPrice || 0;
+                    const iv = (detail.iv !== undefined) ? detail.iv : (greeks.iv || 0);
 
                     const normalizedTick = {
                         symbol,
                         ltp,
                         oi: details.oi || 0,
                         oich: details.oich || 0,
-                        iv: (greeks.iv || 0) * 100,
+                        iv: iv * 100,
                         delta: greeks.delta || 0,
                         theta: greeks.theta || 0,
                         gamma: (greeks.gamma || 0) * 100,
