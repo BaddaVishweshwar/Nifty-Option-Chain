@@ -60,10 +60,10 @@ const getUpstoxOptionChain = async (symbol, strikecount) => {
                     ltp: ce?.market_data?.last_price || 0,
                     oi: ce?.market_data?.oi || 0,
                     oiChange: 0, // Upstox v2 chain doesn't always show daily change here
-                    iv: ceGreeks.iv || 0,
+                    iv: (ceGreeks.iv || 0) * 100,
                     delta: ceGreeks.delta || 0,
-                    theta: (ceGreeks.theta || 0) / 365, // Scale to daily
-                    gamma: (ceGreeks.gamma || 0) * 100, // Scale x100
+                    theta: ceGreeks.theta || 0,
+                    gamma: (ceGreeks.gamma || 0) * 100,
                     vega: ceGreeks.vega || 0
                 },
                 pe: {
@@ -71,9 +71,9 @@ const getUpstoxOptionChain = async (symbol, strikecount) => {
                     ltp: pe?.market_data?.last_price || 0,
                     oi: pe?.market_data?.oi || 0,
                     oiChange: 0,
-                    iv: peGreeks.iv || 0,
+                    iv: (peGreeks.iv || 0) * 100,
                     delta: peGreeks.delta || 0,
-                    theta: (peGreeks.theta || 0) / 365,
+                    theta: peGreeks.theta || 0,
                     gamma: (peGreeks.gamma || 0) * 100,
                     vega: peGreeks.vega || 0
                 }

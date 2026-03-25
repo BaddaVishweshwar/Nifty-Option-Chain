@@ -110,10 +110,10 @@ const initUpstoxWS = async (token) => {
                         ltp,
                         oi: details.oi || 0,
                         oich: details.oich || 0,
-                        iv: greeks.iv || 0,
+                        iv: (greeks.iv || 0) * 100,
                         delta: greeks.delta || 0,
                         theta: greeks.theta || 0,
-                        gamma: greeks.gamma || 0,
+                        gamma: (greeks.gamma || 0) * 100,
                         vega: greeks.vega || 0
                     };
                     tickStore.setTick(symbol, normalizedTick);
@@ -140,10 +140,19 @@ const initUpstoxWS = async (token) => {
 const subscribeSymbols = (symbols) => {
     const provider = tokenStore.getProvider();
     if (provider === 'upstox' && socket && socket.readyState === WebSocket.OPEN) {
+        // Map common keys to Upstox specific instrument keys for subscription
+        const symbolMap = {
+            "NSE:NIFTY50-INDEX": "NSE_INDEX|Nifty 50",
+            "NSE:NIFTYBANK-INDEX": "NSE_INDEX|Nifty Bank",
+            "NSE:FINNIFTY-INDEX": "NSE_INDEX|Nifty Fin Service",
+            "BSE:SENSEX-INDEX": "BSE_INDEX|SENSEX"
+        };
+        const mappedSymbols = symbols.map(s => symbolMap[s] || s);
+
         const request = {
             guid: "guid",
             method: "sub",
-            data: { mode: "full", instrumentKeys: symbols }
+            data: { mode: "full", instrumentKeys: mappedSymbols }
         };
         socket.send(JSON.stringify(request));
     } else if (socket && socket.subscribe) {
