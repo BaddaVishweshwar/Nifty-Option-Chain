@@ -27,54 +27,57 @@ function nd(x) {
 }
 
 /**
- * Calculates theoretical Black-Scholes price
+ * Calculates theoretical Black-Scholes price including dividend yield (q)
  */
-function blackScholesPrice(type, S, K, t, r, v) {
+function blackScholesPrice(type, S, K, t, r, v, q = 0) {
     if (t <= 0) return Math.max(0, type === 'CE' ? S - K : K - S);
-    const d1 = (Math.log(S / K) + (r + (v * v) / 2) * t) / (v * Math.sqrt(t));
+    const d1 = (Math.log(S / K) + (r - q + (v * v) / 2) * t) / (v * Math.sqrt(t));
     const d2 = d1 - v * Math.sqrt(t);
 
     if (type === 'CE') {
-        return S * cnd(d1) - K * Math.exp(-r * t) * cnd(d2);
+        return S * Math.exp(-q * t) * cnd(d1) - K * Math.exp(-r * t) * cnd(d2);
     } else {
-        return K * Math.exp(-r * t) * cnd(-d2) - S * cnd(-d1);
+        return K * Math.exp(-r * t) * cnd(-d2) - S * Math.exp(-q * t) * cnd(-d1);
     }
 }
 
 /**
- * Derives Implied Volatility (IV) from option price using Newton-Raphson
+ * Derives Implied Volatility (IV) from option price using Bisection Method (more robust for expiry day)
  */
-function calculateIV(type, S, K, t, r, marketPrice) {
-    if (marketPrice <= 0.05) return 0.15; // Default low IV for near-zero prices
+function calculateIV(type, S, K, t, r, marketPrice, q = 0) {
+    const intrinsicValue = type === 'CE' ? Math.max(0, S - K) : Math.max(0, K - S);
+    const extrinsicValue = marketPrice - intrinsicValue;
     
-    let v = 0.3; // Initial guess (30%)
-    const maxIterations = 20;
-    const precision = 0.0001;
-
-    for (let i = 0; i < maxIterations; i++) {
-        const price = blackScholesPrice(type, S, K, t, r, v);
-        const diff = marketPrice - price;
-        if (Math.abs(diff) < precision) return v;
-
-        // Vega (derivative of price with respect to volatility)
-        const d1 = (Math.log(S / K) + (r + (v * v) / 2) * t) / (v * Math.sqrt(t));
-        const vega = S * Math.sqrt(t) * nd(d1);
+    // If market price is strictly less than intrinsic value or too small, return a floor IV
+    if (extrinsicValue < 0.05 || marketPrice < 0.10) return 0.15; 
+    
+    let low = 0.001;
+    let high = 5.0; // Up to 500% IV
+    let v = 0.25;
+    
+    for (let i = 0; i < 25; i++) {
+        v = (low + high) / 2;
+        const price = blackScholesPrice(type, S, K, t, r, v, q);
         
-        if (vega < 0.0001) break; // Avoid division by very small vega
-        v = v + diff / vega;
-        if (v <= 0) v = 0.01; // Floor volatility
+        if (price > marketPrice) {
+            high = v;
+        } else {
+            low = v;
+        }
+        
+        if (Math.abs(high - low) < 0.0001) break;
     }
     return v;
 }
 
 /**
- * Calculates Greeks using Black-Scholes model
+ * Calculates Greeks using Black-Scholes model including dividend yield (q)
  */
-function calculateGreeks(type, S, K, t, r, v) {
+function calculateGreeks(type, S, K, t, r, v, q = 0) {
     if (t <= 0) t = 0.00001; 
     if (v <= 0) v = 0.01;
 
-    const d1 = (Math.log(S / K) + (r + (v * v) / 2) * t) / (v * Math.sqrt(t));
+    const d1 = (Math.log(S / K) + (r - q + (v * v) / 2) * t) / (v * Math.sqrt(t));
     const d2 = d1 - v * Math.sqrt(t);
 
     const n_d1 = nd(d1);
@@ -83,15 +86,19 @@ function calculateGreeks(type, S, K, t, r, v) {
 
     let delta, theta, gamma, vega;
 
-    gamma = n_d1 / (S * v * Math.sqrt(t));
-    vega = (S * n_d1 * Math.sqrt(t)) / 100;
+    gamma = (n_d1 * Math.exp(-q * t)) / (S * v * Math.sqrt(t));
+    vega = (S * Math.exp(-q * t) * n_d1 * Math.sqrt(t)) / 100;
 
     if (type === 'CE') {
-        delta = N_d1;
-        theta = (-(S * n_d1 * v) / (2 * Math.sqrt(t)) - r * K * Math.exp(-r * t) * N_d2) / 365;
+        delta = Math.exp(-q * t) * N_d1;
+        theta = (-(S * v * Math.exp(-q * t) * n_d1) / (2 * Math.sqrt(t)) 
+                 + q * S * Math.exp(-q * t) * N_d1 
+                 - r * K * Math.exp(-r * t) * N_d2) / 365;
     } else {
-        delta = N_d1 - 1;
-        theta = (-(S * n_d1 * v) / (2 * Math.sqrt(t)) + r * K * Math.exp(-r * t) * (1 - N_d2)) / 365;
+        delta = Math.exp(-q * t) * (N_d1 - 1);
+        theta = (-(S * v * Math.exp(-q * t) * n_d1) / (2 * Math.sqrt(t)) 
+                 - q * S * Math.exp(-q * t) * (1 - N_d1) 
+                 + r * K * Math.exp(-r * t) * (1 - N_d2)) / 365;
     }
 
     return {
@@ -99,7 +106,7 @@ function calculateGreeks(type, S, K, t, r, v) {
         gamma: parseFloat(gamma.toFixed(6)),
         theta: parseFloat(theta.toFixed(4)),
         vega: parseFloat(vega.toFixed(4)),
-        iv: v * 100 // Return as percentage
+        iv: v * 100 
     };
 }
 

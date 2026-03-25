@@ -2,28 +2,24 @@ const { calculateGreeks, calculateIV } = require("./greeks");
 
 const normalizeOptionsChain = (rawChain, spotPrice = 0, expiryDate = null) => {
   const strikesMap = new Map();
-  const riskFreeRate = 0.10; // 10% standard for India NSE
+  const riskFreeRate = 0.07; // 7% standard for India
+  const dividendYield = 0.015; // 1.5% for Nifty
   
-  // Calculate time to expiry in years (Force IST context)
+  // Calculate time to expiry in years (UTC-based IST normalization)
   let timeToExpiry = 0.00001;
   if (expiryDate) {
     const now = new Date();
-    // Convert current time to IST offset (UTC+5:30)
-    const istOffset = 5.5 * 60 * 60 * 1000;
-    const nowIst = new Date(now.getTime() + istOffset);
-    
     const expiry = new Date(expiryDate);
-    // Expiry is end of day IST (3:30 PM)
-    const expiryIst = new Date(expiry.getTime() + istOffset);
-    expiryIst.setHours(15, 30, 0, 0); 
+    // 3:30 PM IST is 10:00 AM UTC
+    expiry.setUTCHours(10, 0, 0, 0); 
     
-    const diffMs = expiryIst.getTime() - nowIst.getTime();
+    const diffMs = expiry.getTime() - now.getTime();
     const minTime = 1 / (24 * 365); // 1 hour min
     timeToExpiry = Math.max(minTime, diffMs / (1000 * 60 * 60 * 24 * 365));
   }
 
   rawChain.forEach(item => {
-    if (item.strike_price === -1) return;
+    if (item.strike_price === -1 || item.ltp === 0) return;
 
     const strikePrice = item.strike_price;
     if (!strikesMap.has(strikePrice)) {
@@ -48,7 +44,8 @@ const normalizeOptionsChain = (rawChain, spotPrice = 0, expiryDate = null) => {
           strikePrice,
           timeToExpiry,
           riskFreeRate,
-          item.ltp
+          item.ltp,
+          dividendYield
         );
 
         // 2. Calculate Greeks using the Derived IV
@@ -58,7 +55,8 @@ const normalizeOptionsChain = (rawChain, spotPrice = 0, expiryDate = null) => {
           strikePrice,
           timeToExpiry,
           riskFreeRate,
-          iv
+          iv,
+          dividendYield
         );
         delta = calculated.delta;
         gamma = calculated.gamma;
