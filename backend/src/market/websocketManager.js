@@ -1,121 +1,173 @@
 const { fyersDataSocket } = require("fyers-api-v3");
 const tokenStore = require("../auth/tokenStore");
 const tickStore = require("./tickStore");
+const protobuf = require("protobufjs");
+const WebSocket = require("ws");
+const axios = require("axios");
+const path = require("path");
 require('dotenv').config();
 
 let socket = null;
 let io = null;
+let upstoxProto = null;
 
-const closeSocket = () => {
-  if (socket) {
-    try {
-      socket.close();
-      console.log("Existing Fyers WebSocket closed.");
-    } catch (err) {
-      console.error("Error closing socket:", err.message);
-    }
-    socket = null;
-  }
+const loadProto = async () => {
+    if (upstoxProto) return upstoxProto;
+    const root = await protobuf.load(path.join(__dirname, "upstox-market-data.proto"));
+    upstoxProto = root.lookupType("com.upstox.marketdata.model.v2.MarketDataFeed");
+    return upstoxProto;
 };
 
-const initWebSocket = (socketIoInstance) => {
-  closeSocket();
-  io = socketIoInstance;
-  const token = tokenStore.getAccessToken();
-  
-  if (!token || typeof token !== 'string' || token.length < 10) {
-    console.error("No valid access token found for WebSocket");
-    return;
-  }
-
-  try {
-    const fullToken = `${process.env.FYERS_CLIENT_ID}:${token}`;
-    console.log(`Initializing FyersDataSocket with token (length: ${fullToken.length})...`);
-    socket = new fyersDataSocket(fullToken);
-    console.log("FyersDataSocket initialization completed.");
-  } catch (err) {
-    console.error("Error setting up Fyers Data Socket:", err.message);
-    if (err.message.includes("expired")) {
-      console.log("Token expired. Clearing token store...");
-      // We can't easily clear it from here without risking circular dep or db direct
-      // But we can at least log it. The next time the user loads the page, /api/auth/status should ideally check this.
+const closeSocket = () => {
+    if (socket) {
+        try {
+            if (socket.close) socket.close();
+            console.log("Existing WebSocket closed.");
+        } catch (err) {
+            console.error("Error closing socket:", err.message);
+        }
+        socket = null;
     }
-    return;
-  }
-  
-  let isConnecting = false;
-  let reconnectAttempts = 0;
-  const MAX_RECONNECT_ATTEMPTS = 5;
+};
 
-  const connect = () => {
-    if (isConnecting) return;
-    isConnecting = true;
-    console.log(`[WebSocket] Connecting to Fyers (Attempt ${reconnectAttempts + 1})...`);
-    socket.connect();
-  };
+const initWebSocket = async (socketIoInstance) => {
+    closeSocket();
+    io = socketIoInstance;
+    const token = tokenStore.getAccessToken();
+    const provider = tokenStore.getProvider();
 
-  socket.on("connect", () => {
-    console.log("Fyers WebSocket connected");
-    isConnecting = false;
-    reconnectAttempts = 0;
-    if (io) io.emit("connection_status", { connected: true });
-  });
+    if (!token) return;
 
-  socket.on("message", (ticks) => {
-    if (Array.isArray(ticks)) {
-      ticks.forEach(tick => {
-        tickStore.setTick(tick.symbol, tick);
-      });
-      if (io) io.emit("tick_update", ticks);
-    } else if (ticks) {
-      tickStore.setTick(ticks.symbol, ticks);
-      if (io) io.emit("tick_update", [ticks]);
-    }
-  });
-
-  socket.on("error", (err) => {
-    console.error("Fyers WebSocket error:", err);
-    isConnecting = false;
-    handleReconnect();
-  });
-
-  socket.on("close", () => {
-    console.log("Fyers WebSocket closed");
-    isConnecting = false;
-    if (io) io.emit("connection_status", { connected: false });
-    handleReconnect();
-  });
-
-  const handleReconnect = () => {
-    if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
-      reconnectAttempts++;
-      const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
-      console.log(`[WebSocket] Retrying in ${delay / 1000}s...`);
-      setTimeout(connect, delay);
+    if (provider === 'upstox') {
+        initUpstoxWS(token);
     } else {
-      console.error("[WebSocket] Max reconnect attempts reached.");
+        initFyersWS(token);
     }
-  };
+};
 
-  connect();
+const initFyersWS = (token) => {
+    try {
+        const { fyersDataSocket } = require("fyers-api-v3");
+        const fullToken = `${process.env.FYERS_CLIENT_ID}:${token}`;
+        socket = new fyersDataSocket(fullToken);
+        
+        socket.on("connect", () => {
+            console.log("Fyers WebSocket connected");
+            if (io) io.emit("connection_status", { connected: true });
+        });
+
+        socket.on("message", (ticks) => {
+            if (Array.isArray(ticks)) {
+                ticks.forEach(t => tickStore.setTick(t.symbol, t));
+                if (io) io.emit("tick_update", ticks);
+            } else if (ticks) {
+                tickStore.setTick(ticks.symbol, ticks);
+                if (io) io.emit("tick_update", [ticks]);
+            }
+        });
+
+        socket.on("error", (err) => console.error("Fyers WS Error:", err));
+        socket.on("close", () => {
+            console.log("Fyers WS Closed");
+            if (io) io.emit("connection_status", { connected: false });
+        });
+
+        socket.connect();
+    } catch (err) {
+        console.error("Fyers WS Init Error:", err);
+    }
+};
+
+const initUpstoxWS = async (token) => {
+    try {
+        const protoType = await loadProto();
+        
+        // 1. Authorize Market Data Feed
+        const authRes = await axios.get("https://api.upstox.com/v2/feed/market-data-feed/authorize", {
+            headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
+        });
+
+        const wsUrl = authRes.data.data.authorized_redirect_uri;
+        socket = new WebSocket(wsUrl, { followRedirects: true });
+
+        socket.on("open", () => {
+            console.log("Upstox WebSocket connected");
+            if (io) io.emit("connection_status", { connected: true });
+        });
+
+        socket.on("message", (data) => {
+            try {
+                const decoded = protoType.decode(data);
+                const result = protoType.toObject(decoded, { longs: String, enums: String, bytes: String });
+                
+                const ticks = Object.entries(result.data).map(([symbol, detail]) => {
+                    const greeks = detail.optionGreeks || {};
+                    const details = detail.marketFullDetails || detail.extendedFeed || {};
+                    const ltp = detail.ltp?.lastPrice || details.lastPrice || 0;
+
+                    const normalizedTick = {
+                        symbol,
+                        ltp,
+                        oi: details.oi || 0,
+                        oich: details.oich || 0,
+                        iv: greeks.iv || 0,
+                        delta: greeks.delta || 0,
+                        theta: greeks.theta || 0,
+                        gamma: greeks.gamma || 0,
+                        vega: greeks.vega || 0
+                    };
+                    tickStore.setTick(symbol, normalizedTick);
+                    return normalizedTick;
+                });
+
+                if (io) io.emit("tick_update", ticks);
+            } catch (err) {
+                console.error("Upstox Protobuf Decode Error:", err);
+            }
+        });
+
+        socket.on("error", (err) => console.error("Upstox WS Error:", err));
+        socket.on("close", () => {
+            console.log("Upstox WS Closed");
+            if (io) io.emit("connection_status", { connected: false });
+        });
+
+    } catch (err) {
+        console.error("Upstox WS Init Error:", err);
+    }
 };
 
 const subscribeSymbols = (symbols) => {
-  if (socket) {
-    socket.subscribe(symbols);
-    // Mode 1: Lite, Mode 2: Full
-    socket.mode(socket.mode.Full, symbols);
-  }
+    const provider = tokenStore.getProvider();
+    if (provider === 'upstox' && socket && socket.readyState === WebSocket.OPEN) {
+        const request = {
+            guid: "guid",
+            method: "sub",
+            data: { mode: "full", instrumentKeys: symbols }
+        };
+        socket.send(JSON.stringify(request));
+    } else if (socket && socket.subscribe) {
+        socket.subscribe(symbols);
+        socket.mode(socket.mode.Full, symbols);
+    }
 };
 
 const unsubscribeSymbols = (symbols) => {
-  if (socket) {
-    socket.unsubscribe(symbols);
-  }
+    const provider = tokenStore.getProvider();
+    if (provider === 'upstox' && socket && socket.readyState === WebSocket.OPEN) {
+        const request = {
+            guid: "guid",
+            method: "unsub",
+            data: { mode: "full", instrumentKeys: symbols }
+        };
+        socket.send(JSON.stringify(request));
+    } else if (socket && socket.unsubscribe) {
+        socket.unsubscribe(symbols);
+    }
 };
 
 module.exports = {
-  initWebSocket,
-  subscribeSymbols,
-  unsubscribeSymbols
+    initWebSocket,
+    subscribeSymbols,
+    unsubscribeSymbols
 };

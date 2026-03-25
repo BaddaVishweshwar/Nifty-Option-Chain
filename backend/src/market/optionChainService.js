@@ -1,8 +1,101 @@
 const { getFyersModel } = require("./fyersClient");
+const { getUpstoxModel } = require("./upstoxClient");
+const tokenStore = require("../auth/tokenStore");
 
 const getOptionChain = async (symbol, strikecount = 10) => {
+  const provider = tokenStore.getProvider();
+  
+  if (provider === 'upstox') {
+      return getUpstoxOptionChain(symbol, strikecount);
+  } else {
+      return getFyersOptionChain(symbol, strikecount);
+  }
+};
+
+const getUpstoxOptionChain = async (symbol, strikecount) => {
+    const upstox = getUpstoxModel();
+    const token = tokenStore.getAccessToken();
+    if (!token) throw new Error("Not authenticated with Upstox");
+    upstox.setAccessToken(token);
+
+    try {
+        // Map symbol to Upstox instrument key
+        const symbolMap = {
+            "NSE:NIFTY50-INDEX": "NSE_INDEX|Nifty 50",
+            "NSE:NIFTYBANK-INDEX": "NSE_INDEX|Nifty Bank",
+            "NSE:FINNIFTY-INDEX": "NSE_INDEX|Nifty Fin Service",
+            "BSE:SENSEX-INDEX": "BSE_INDEX|SENSEX"
+        };
+        const instrumentKey = symbolMap[symbol] || symbol;
+
+        // 1. Get Expiry Dates
+        const metadata = await upstox.getMarketQuote([instrumentKey]);
+        // Upstox provides option chain directly via a specialized endpoint
+        // Let's use the /v2/option/chain endpoint which is better for full chain
+        
+        // Find closest expiry for index (usually fetched from quotes or metadata)
+        // For simplicity, we'll fetch the chain for the underlying
+        const fullChainResponse = await upstox.getOptionChain(instrumentKey, ''); // '' gets all or closest
+        
+        if (fullChainResponse.status !== 'success') {
+            throw new Error(fullChainResponse.errors?.[0]?.message || "Failed to fetch Upstox chain");
+        }
+
+        const rawData = fullChainResponse.data;
+        // Upstox v2 option chain format: Array of strikes with call_options and put_options
+        // Each option object includes market_data and option_greeks
+        
+        const spot = rawData[0]?.underlying_key ? (await upstox.getMarketQuote([instrumentKey])).data[instrumentKey].last_price : 0;
+
+        const normalizedChain = rawData.map(item => {
+            const ce = item.call_options;
+            const pe = item.put_options;
+            const ceGreeks = ce?.option_greeks || {};
+            const peGreeks = pe?.option_greeks || {};
+
+            return {
+                strike: item.strike_price,
+                ce: {
+                    symbol: ce?.instrument_key || '',
+                    ltp: ce?.market_data?.last_price || 0,
+                    oi: ce?.market_data?.oi || 0,
+                    oiChange: 0, // Upstox v2 chain doesn't always show daily change here
+                    iv: ceGreeks.iv || 0,
+                    delta: ceGreeks.delta || 0,
+                    theta: (ceGreeks.theta || 0) / 365, // Scale to daily
+                    gamma: (ceGreeks.gamma || 0) * 100, // Scale x100
+                    vega: ceGreeks.vega || 0
+                },
+                pe: {
+                    symbol: pe?.instrument_key || '',
+                    ltp: pe?.market_data?.last_price || 0,
+                    oi: pe?.market_data?.oi || 0,
+                    oiChange: 0,
+                    iv: peGreeks.iv || 0,
+                    delta: peGreeks.delta || 0,
+                    theta: (peGreeks.theta || 0) / 365,
+                    gamma: (peGreeks.gamma || 0) * 100,
+                    vega: peGreeks.vega || 0
+                }
+            };
+        });
+
+        return {
+            underlyingLtp: spot,
+            optionsChain: normalizedChain
+        };
+
+    } catch (error) {
+        console.error("Upstox Chain Error:", error);
+        throw error;
+    }
+};
+
+const getFyersOptionChain = async (symbol, strikecount) => {
   const fyersModel = getFyersModel();
-  if (!fyersModel) throw new Error("Not authenticated");
+  const token = tokenStore.getAccessToken();
+  if (!token) throw new Error("Not authenticated");
+  fyersModel.setAccessToken(token);
 
   try {
     let response = await fyersModel.getOptionChain({
@@ -11,103 +104,54 @@ const getOptionChain = async (symbol, strikecount = 10) => {
       timestamp: ""
     });
 
-    // Fallback for NIFTY 50 if primary symbol fails
-    if (response.s !== "ok" && symbol === "NSE:NIFTY50-INDEX") {
-      console.log("NIFTY50 primary failed, trying fallback NSE:NIFTY-INDEX...");
-      response = await fyersModel.getOptionChain({
-        symbol: "NSE:NIFTY-INDEX",
-        strikecount,
-        timestamp: ""
-      });
-    }
-
     if (response.s === "ok") {
       let { underlyingLtp, underlying_ltp, optionsChain } = response.data;
-      
-      if (optionsChain && optionsChain.length > 0) {
-        const firstOption = optionsChain.find(o => o.strike_price > 0);
-        if (firstOption) {
-          console.log("[RAW DATA DEBUG] First Option Item:", JSON.stringify(firstOption, null, 2));
-        }
-      }
-
       let spot = underlyingLtp || underlying_ltp || 0;
-
-      // If spot is still 0, try to fetch it manually via Quotes
-      if (spot === 0) {
-        try {
-          console.log(`[API] Spot 0 for ${symbol}, fetching manual quote...`);
-          const quoteResponse = await fyersModel.getQuotes([symbol]);
-          if (quoteResponse.s === "ok" && quoteResponse.d && quoteResponse.d[0]) {
-            spot = quoteResponse.d[0].v.lp;
-            console.log(`[API] Extracted manual spot for ${symbol}: ${spot}`);
-          }
-        } catch (quoteErr) {
-          console.error("Error fetching manual quote:", quoteErr.message);
-        }
-      }
 
       const { normalizeOptionsChain } = require("../utils/normalizer");
       
       let expiryDate = null;
       if (response.data.expiryData && response.data.expiryData.length > 0) {
-        // Fyers v3 provides native expiry list. Use the first one (closest)
-        const dateStr = response.data.expiryData[0].date; // Format "DD-MM-YYYY"
+        const dateStr = response.data.expiryData[0].date;
         if (dateStr) {
           const parts = dateStr.split('-');
-          if (parts.length === 3) {
-            expiryDate = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
-            console.log(`[Expiry] Using native Fyers expiry: ${dateStr}`);
-          }
-        }
-      }
-
-      if (!expiryDate && optionsChain && optionsChain.length > 0) {
-        // Fallback to regex parsing if native field is missing
-        const optionItem = optionsChain.find(item => 
-          item.symbol.includes("CE") || item.symbol.includes("PE")
-        );
-        
-        if (optionItem) {
-          const fullSymbol = optionItem.symbol.replace("NSE:", "").replace("BSE:", "");
-          const dateMatch = fullSymbol.match(/[A-Z]+(\d{2}[A-Z]{3}|\d{5})/);
-          if (dateMatch) {
-            const datePart = dateMatch[1];
-            if (datePart.length === 5 && !isNaN(datePart)) {
-              const year = "20" + datePart.substring(0, 2);
-              const monthCode = datePart.substring(2, 3);
-              const day = parseInt(datePart.substring(3, 5));
-              const monthsMap = { "1": 0, "2": 1, "3": 2, "4": 3, "5": 4, "6": 5, "7": 6, "8": 7, "9": 8, "O": 9, "N": 10, "D": 11 };
-              const month = monthsMap[monthCode];
-              if (month !== undefined && !isNaN(day)) expiryDate = new Date(parseInt(year), month, day);
-            }
-          }
+          expiryDate = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
         }
       }
 
       const normalizedChain = normalizeOptionsChain(optionsChain, spot, expiryDate);
-      console.log(`[Greeks] Result: ${optionsChain ? optionsChain.length : 0} items. Expiry: ${expiryDate ? expiryDate.toISOString().split('T')[0] : 'None'}`);
-      
       return {
         underlyingLtp: spot,
         optionsChain: normalizedChain
       };
     } else {
-      throw new Error(response.message || "Failed to fetch option chain");
+      throw new Error(response.message || "Failed to fetch Fyers chain");
     }
   } catch (error) {
-    console.error("Error fetching option chain:", error);
+    console.error("Fyers Chain Error:", error);
     throw error;
   }
 };
 
 const getSymbols = (req, res) => {
-  const symbols = [
-    { label: "NIFTY 50", value: "NSE:NIFTY50-INDEX" },
-    { label: "BANK NIFTY", value: "NSE:NIFTYBANK-INDEX" },
-    { label: "FIN NIFTY", value: "NSE:FINNIFTY-INDEX" },
-    { label: "SENSEX", value: "BSE:SENSEX-INDEX" }
-  ];
+  const provider = tokenStore.getProvider();
+  let symbols = [];
+  
+  if (provider === 'upstox') {
+      symbols = [
+        { label: "NIFTY 50", value: "NSE:NIFTY50-INDEX" },
+        { label: "BANK NIFTY", value: "NSE:NIFTYBANK-INDEX" },
+        { label: "FIN NIFTY", value: "NSE:FINNIFTY-INDEX" },
+        { label: "SENSEX", value: "BSE:SENSEX-INDEX" }
+      ];
+  } else {
+      symbols = [
+        { label: "NIFTY 50", value: "NSE:NIFTY50-INDEX" },
+        { label: "BANK NIFTY", value: "NSE:NIFTYBANK-INDEX" },
+        { label: "FIN NIFTY", value: "NSE:FINNIFTY-INDEX" },
+        { label: "SENSEX", value: "BSE:SENSEX-INDEX" }
+      ];
+  }
   res.json(symbols);
 };
 

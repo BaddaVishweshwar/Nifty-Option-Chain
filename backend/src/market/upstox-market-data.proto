@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package com.upstox.marketdata.model.v2;
+
+message MarketDataFeed {
+  map<string, MarketFullData> data = 1;
+}
+
+message MarketFullData {
+  optional LTP ltp = 1;
+  optional MarketLevel market_level = 2;
+  optional OHLC ohlc = 3;
+  optional MarketFullDetails market_full_details = 4;
+  optional OptionGreeks option_greeks = 5;
+  optional ExtendedFeed extended_feed = 6;
+}
+
+message LTP {
+  double last_price = 1;
+  int64 ltt = 2; // Last trade time
+  int64 ltq = 3; // Last trade quantity
+}
+
+message MarketLevel {
+  repeated Quote bid = 1;
+  repeated Quote ask = 2;
+}
+
+message Quote {
+  int32 quantity = 1;
+  double price = 2;
+  int32 orders = 3;
+}
+
+message OHLC {
+  double open = 1;
+  double high = 2;
+  double low = 3;
+  double close = 4;
+}
+
+message MarketFullDetails {
+  double last_price = 1;
+  int64 last_trade_time = 2;
+  double vtt = 3; // Volume Traded Today
+  double avg_price = 4;
+  double prev_close = 5;
+  double oi = 6;
+  double oich = 7;
+  double low_circuit = 8;
+  double upper_circuit = 9;
+}
+
+message OptionGreeks {
+  double iv = 1;
+  double delta = 2;
+  double theta = 3;
+  double gamma = 4;
+  double vega = 5;
+}
+
+message ExtendedFeed {
+  double atp = 1;
+  double cp = 2;
+  double vtt = 3;
+  double oi = 4;
+  double oich = 5;
+}
