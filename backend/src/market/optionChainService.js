@@ -60,7 +60,20 @@ const getUpstoxOptionChain = async (symbol, strikecount) => {
             }
         }
 
-        const spot = rawData[0]?.underlying_key ? (await upstox.getMarketQuote([instrumentKey])).data[instrumentKey].last_price : 0;
+        // 3. Get spot price safely - first try from chain data itself, then from market quote
+        let spot = rawData[0]?.underlying_spot_price || 0;
+        if (!spot) {
+            try {
+                const quoteRes = await upstox.getMarketQuote([instrumentKey]);
+                if (quoteRes?.data) {
+                    // The response key format may differ, so just grab first value
+                    const quoteValues = Object.values(quoteRes.data);
+                    spot = quoteValues[0]?.last_price || 0;
+                }
+            } catch (e) {
+                console.warn('[Upstox] Could not fetch spot price from quote API:', e.message);
+            }
+        }
 
         const normalizedChain = rawData.map(item => {
             const ce = item.call_options;
