@@ -133,10 +133,10 @@ export const OptionChainTable: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-zinc-950 px-6">
+    <div className="flex flex-col h-full overflow-hidden">
       <div 
         ref={parentRef} 
-        className="overflow-auto border border-zinc-800 rounded-xl shadow-2xl h-[calc(100vh-280px)] custom-scrollbar"
+        className="overflow-auto h-[calc(100vh-280px)] custom-scrollbar"
       >
         <table className="w-full border-collapse table-fixed min-w-[1300px]">
           <thead className="sticky top-0 z-20 bg-zinc-900 shadow-md block">
