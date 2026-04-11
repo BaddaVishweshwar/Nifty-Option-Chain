@@ -1,8 +1,7 @@
-import { TopBar } from './components/TopBar/TopBar';
-import { StatsRow } from './components/StatsRow/StatsRow';
-import { OptionChainTable } from './components/OptionChainTable/OptionChainTable';
-import { OIBarChart } from './components/Charts/OIBarChart';
-import { PCRGauge } from './components/Charts/PCRGauge';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Layout } from './components/Navigation/Layout';
+import { DashboardPage } from './pages/DashboardPage';
+import { SimplifiedViewPage } from './pages/SimplifiedViewPage';
 import { useMarketSocket } from './hooks/useMarketSocket';
 import { useOptionChainStore } from './store/optionChainStore';
 import { useEffect, useState } from 'react';
@@ -121,21 +120,14 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-zinc-950 overflow-hidden">
-      <TopBar />
-      <div className="flex-1 overflow-auto">
-        <StatsRow />
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 p-6">
-          <div className="xl:col-span-3">
-             <OptionChainTable />
-          </div>
-          <div className="flex flex-col gap-6">
-            <PCRGauge />
-            <OIBarChart />
-          </div>
-        </div>
-      </div>
-    </div>
+    <BrowserRouter>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/quick-view" element={<SimplifiedViewPage />} />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
   );
 }
 
