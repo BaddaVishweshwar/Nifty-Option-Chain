@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, Zap, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
