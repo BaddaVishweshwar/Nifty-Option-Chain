@@ -84,48 +84,43 @@ export const SimplifiedOptionTable: React.FC = () => {
     width: `${TOTAL_W}px`,
   };
 
-  const ToggleBtn = (
+  const EyeBtn = (
     <button
       onClick={() => setShowBreakdown(v => !v)}
-      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[10px] font-bold uppercase tracking-wider transition-all ${
-        showBreakdown
-          ? 'bg-amber-500/10 border-amber-500/40 text-amber-400'
-          : 'bg-zinc-800 border-zinc-700 text-zinc-500 hover:text-zinc-300'
-      }`}
+      title={showBreakdown ? 'Hide formula numbers' : 'Show formula numbers'}
+      className={`p-0.5 rounded transition-all ${showBreakdown ? 'text-amber-400' : 'text-zinc-600 hover:text-zinc-300'}`}
     >
       {showBreakdown ? <Eye size={11} /> : <EyeOff size={11} />}
-      {showBreakdown ? 'Hide Formula' : 'Show Formula'}
     </button>
   );
 
   return (
     <div className="flex flex-col h-full bg-zinc-950 overflow-hidden">
-      {/* Toolbar */}
-      <div className="flex items-center justify-end px-4 py-2 border-b border-zinc-800/60 shrink-0">
-        {ToggleBtn}
-      </div>
       {/* Outer scroll container */}
-      <div className="overflow-auto flex-1 custom-scrollbar">
+      <div className="overflow-auto h-full custom-scrollbar">
 
         {/* ════ STICKY HEADER ════ */}
         <div className="sticky top-0 z-20 bg-zinc-900 border-b border-zinc-800 shadow-lg">
 
           {/* ── Section labels row ── */}
           <div style={gridStyle} className="border-b border-zinc-800/60">
-            {/* Call Side spans 4 cols */}
+            {/* Call Side: cols 1–4 */}
             <div
-              style={{ gridColumn: 'span 4' }}
+              style={{ gridColumn: '1 / 5' }}
               className="py-1.5 text-[10px] font-black tracking-[0.25em] text-blue-400/60 text-center uppercase border-r border-zinc-800/50"
             >
               Call Side
             </div>
-            {/* Strike: 1 col */}
-            <div className="py-1.5 text-[10px] font-black tracking-[0.25em] text-zinc-500 text-center uppercase">
+            {/* Strike: col 5 */}
+            <div
+              style={{ gridColumn: '5 / 6' }}
+              className="py-1.5 text-[10px] font-black tracking-[0.25em] text-zinc-500 text-center uppercase"
+            >
               Strikes
             </div>
-            {/* Put Side spans 5 cols */}
+            {/* Put Side: cols 6–11 (incl Net GEX at col 10) */}
             <div
-              style={{ gridColumn: 'span 5' }}
+              style={{ gridColumn: '6 / 11' }}
               className="py-1.5 text-[10px] font-black tracking-[0.25em] text-red-400/60 text-center uppercase border-l border-zinc-800/50"
             >
               Put Side
@@ -135,19 +130,23 @@ export const SimplifiedOptionTable: React.FC = () => {
           {/* ── Column label row ── */}
           <div style={gridStyle}>
             {/* 1 - Call GEX */}
-            <div className="flex items-center justify-center py-2.5 px-1 border-r border-zinc-800/50">
-              <span className="text-[9px] font-black uppercase text-emerald-400/80">Call GEX</span>
+            <div className="flex flex-col items-center justify-center py-2 px-1 gap-0.5 border-r border-zinc-800/50">
+              <div className="flex items-center gap-1">
+                <span className="text-[9px] font-black uppercase text-emerald-400/80">Call GEX</span>
+                {EyeBtn}
+              </div>
+              <span className="text-[7px] text-zinc-600 leading-none">OI × S² × γ × −1</span>
             </div>
             {/* 2 - Call OI */}
-            <div className="flex items-center justify-center py-2.5 px-1 text-[9px] font-black uppercase text-zinc-400">
+            <div className="flex items-center justify-center py-2 px-1 text-[9px] font-black uppercase text-zinc-400">
               Call OI
             </div>
-            {/* 3 - Call Gamma */}
-            <div className="flex items-center justify-center py-2.5 px-1 text-[9px] font-black uppercase text-blue-400/70">
-              Gamma
+            {/* 3 - Call γ */}
+            <div className="flex items-center justify-center py-2 px-1 text-[9px] font-black uppercase text-blue-400/70">
+              γ
             </div>
             {/* 4 - Call LTP */}
-            <div className="flex items-center justify-center py-2.5 px-1 text-[9px] font-black uppercase text-zinc-300 border-r border-zinc-800/50">
+            <div className="flex items-center justify-center py-2 px-1 text-[9px] font-black uppercase text-zinc-300 border-r border-zinc-800/50">
               LTP
             </div>
             {/* 5 - Strike */}
@@ -155,24 +154,29 @@ export const SimplifiedOptionTable: React.FC = () => {
               Strike
             </div>
             {/* 6 - Put LTP */}
-            <div className="flex items-center justify-center py-2.5 px-1 text-[9px] font-black uppercase text-zinc-300 border-l border-zinc-800/50">
+            <div className="flex items-center justify-center py-2 px-1 text-[9px] font-black uppercase text-zinc-300 border-l border-zinc-800/50">
               LTP
             </div>
-            {/* 7 - Put Gamma */}
-            <div className="flex items-center justify-center py-2.5 px-1 text-[9px] font-black uppercase text-red-400/70">
-              Gamma
+            {/* 7 - Put γ */}
+            <div className="flex items-center justify-center py-2 px-1 text-[9px] font-black uppercase text-red-400/70">
+              γ
             </div>
             {/* 8 - Put OI */}
-            <div className="flex items-center justify-center py-2.5 px-1 text-[9px] font-black uppercase text-zinc-400">
+            <div className="flex items-center justify-center py-2 px-1 text-[9px] font-black uppercase text-zinc-400">
               Put OI
             </div>
             {/* 9 - Put GEX */}
-            <div className="flex items-center justify-center py-2.5 px-1 border-l border-zinc-800/50">
-              <span className="text-[9px] font-black uppercase text-rose-400/80">Put GEX</span>
+            <div className="flex flex-col items-center justify-center py-2 px-1 gap-0.5 border-l border-zinc-800/50">
+              <div className="flex items-center gap-1">
+                {EyeBtn}
+                <span className="text-[9px] font-black uppercase text-rose-400/80">Put GEX</span>
+              </div>
+              <span className="text-[7px] text-zinc-600 leading-none">OI × S² × γ × +1</span>
             </div>
             {/* 10 - Net GEX */}
-            <div className="flex items-center justify-center py-2.5 px-1 border-l-2 border-violet-500/25 bg-violet-950/10">
+            <div className="flex flex-col items-center justify-center py-2 px-1 gap-0.5 border-l border-violet-500/30 bg-violet-950/10">
               <span className="text-[9px] font-black uppercase text-violet-400/90">Net GEX</span>
+              <span className="text-[7px] text-zinc-600 leading-none">C.GEX + P.GEX</span>
             </div>
           </div>
         </div>
@@ -293,7 +297,7 @@ export const SimplifiedOptionTable: React.FC = () => {
                 </div>
 
                 {/* ── 10: Net GEX ── */}
-                <div className="flex flex-col items-center justify-center px-2 gap-0.5 border-l-2 border-violet-500/20 bg-violet-950/10">
+                <div className="flex flex-col items-center justify-center px-2 gap-0.5 border-l border-violet-500/30 bg-violet-950/10">
                   <span className={`text-[12px] font-bold font-mono leading-none ${gexCls(netGex)}`}>
                     {fmtGex(netGex)}
                   </span>
