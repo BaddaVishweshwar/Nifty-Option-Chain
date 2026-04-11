@@ -317,10 +317,10 @@ export const SimplifiedOptionTable: React.FC = () => {
                 <td className={`${tdBase} border-l border-zinc-800/30 bg-zinc-900/40`}>
                   <div className="flex flex-col items-center justify-center">
                     {netGex > 0 && (
-                      <span className="text-[10px] font-black uppercase tracking-wider text-rose-400/90 bg-rose-400/10 px-2 py-0.5 rounded shadow-sm">Negative</span>
+                      <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400/90 bg-emerald-400/10 px-2 py-0.5 rounded shadow-sm">Positive</span>
                     )}
                     {netGex < 0 && (
-                      <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400/90 bg-emerald-400/10 px-2 py-0.5 rounded shadow-sm">Positive</span>
+                      <span className="text-[10px] font-black uppercase tracking-wider text-rose-400/90 bg-rose-400/10 px-2 py-0.5 rounded shadow-sm">Negative</span>
                     )}
                   </div>
                 </td>
