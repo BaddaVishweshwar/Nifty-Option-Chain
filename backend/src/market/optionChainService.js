@@ -114,7 +114,7 @@ const getSymbols = (req, res) => {
       .filter(item => !indexSymbols.includes(item.symbol))
       .map(item => ({
         label: item.symbol,
-        value: `NSE_EQ|${item.symbol}`,
+        value: item.instrument_key || `NSE_EQ|${item.symbol}`,
         lotSize: item.lotSize
       }));
     

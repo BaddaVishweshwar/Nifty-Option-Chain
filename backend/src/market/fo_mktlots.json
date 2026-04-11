@@ -21,854 +21,1067 @@
   },
   {
     "symbol": "360ONE",
-    "lotSize": 500
+    "lotSize": 500,
+    "instrument_key": "NSE_EQ|INE466L01038"
   },
   {
     "symbol": "ABB",
-    "lotSize": 125
+    "lotSize": 125,
+    "instrument_key": "NSE_EQ|INE117A01022"
   },
   {
     "symbol": "ADANIENT",
-    "lotSize": 309
+    "lotSize": 309,
+    "instrument_key": "NSE_EQ|INE423A01024"
   },
   {
     "symbol": "ADANIGREEN",
-    "lotSize": 600
+    "lotSize": 600,
+    "instrument_key": "NSE_EQ|INE364U01010"
   },
   {
     "symbol": "ADANIPORTS",
-    "lotSize": 475
+    "lotSize": 475,
+    "instrument_key": "NSE_EQ|INE742F01042"
   },
   {
     "symbol": "ALKEM",
-    "lotSize": 125
+    "lotSize": 125,
+    "instrument_key": "NSE_EQ|INE540L01014"
   },
   {
     "symbol": "AMBER",
-    "lotSize": 100
+    "lotSize": 100,
+    "instrument_key": "NSE_EQ|INE371P01015"
   },
   {
     "symbol": "AMBUJACEM",
-    "lotSize": 1050
+    "lotSize": 1050,
+    "instrument_key": "NSE_EQ|INE079A01024"
   },
   {
     "symbol": "ANGELONE",
-    "lotSize": 2500
+    "lotSize": 2500,
+    "instrument_key": "NSE_EQ|INE732I01021"
   },
   {
     "symbol": "APLAPOLLO",
-    "lotSize": 350
+    "lotSize": 350,
+    "instrument_key": "NSE_EQ|INE702C01027"
   },
   {
     "symbol": "APOLLOHOSP",
-    "lotSize": 125
+    "lotSize": 125,
+    "instrument_key": "NSE_EQ|INE437A01024"
   },
   {
     "symbol": "ASTRAL",
-    "lotSize": 425
+    "lotSize": 425,
+    "instrument_key": "NSE_EQ|INE006I01046"
   },
   {
     "symbol": "AUBANK",
-    "lotSize": 1000
+    "lotSize": 1000,
+    "instrument_key": "NSE_EQ|INE949L01017"
   },
   {
     "symbol": "AUROPHARMA",
-    "lotSize": 550
+    "lotSize": 550,
+    "instrument_key": "NSE_EQ|INE406A01037"
   },
   {
     "symbol": "ADANIENSOL",
-    "lotSize": 675
+    "lotSize": 675,
+    "instrument_key": "NSE_EQ|INE931S01010"
   },
   {
     "symbol": "BAJAJ-AUTO",
-    "lotSize": 75
+    "lotSize": 75,
+    "instrument_key": "NSE_EQ|INE917I01010"
   },
   {
     "symbol": "BAJAJHLDNG",
-    "lotSize": 50
+    "lotSize": 50,
+    "instrument_key": "NSE_EQ|INE118A01012"
   },
   {
     "symbol": "BANDHANBNK",
-    "lotSize": 3600
+    "lotSize": 3600,
+    "instrument_key": "NSE_EQ|INE545U01014"
   },
   {
     "symbol": "BANKBARODA",
-    "lotSize": 2925
+    "lotSize": 2925,
+    "instrument_key": "NSE_EQ|INE028A01039"
   },
   {
     "symbol": "BHARATFORG",
-    "lotSize": 500
+    "lotSize": 500,
+    "instrument_key": "NSE_EQ|INE465A01025"
   },
   {
     "symbol": "BIOCON",
-    "lotSize": 2500
+    "lotSize": 2500,
+    "instrument_key": "NSE_EQ|INE376G01013"
   },
   {
     "symbol": "BOSCHLTD",
-    "lotSize": 25
+    "lotSize": 25,
+    "instrument_key": "NSE_EQ|INE323A01026"
   },
   {
     "symbol": "ASIANPAINT",
-    "lotSize": 250
+    "lotSize": 250,
+    "instrument_key": "NSE_EQ|INE021A01026"
   },
   {
     "symbol": "BPCL",
-    "lotSize": 1975
+    "lotSize": 1975,
+    "instrument_key": "NSE_EQ|INE029A01011"
   },
   {
     "symbol": "CANBK",
-    "lotSize": 6750
+    "lotSize": 6750,
+    "instrument_key": "NSE_EQ|INE476A01022"
   },
   {
     "symbol": "CHOLAFIN",
-    "lotSize": 625
+    "lotSize": 625,
+    "instrument_key": "NSE_EQ|INE121A08PJ0"
   },
   {
     "symbol": "CIPLA",
-    "lotSize": 375
+    "lotSize": 375,
+    "instrument_key": "NSE_EQ|INE059A01026"
   },
   {
     "symbol": "COALINDIA",
-    "lotSize": 1350
+    "lotSize": 1350,
+    "instrument_key": "NSE_EQ|INE522F01014"
   },
   {
     "symbol": "COLPAL",
-    "lotSize": 225
+    "lotSize": 225,
+    "instrument_key": "NSE_EQ|INE259A01022"
   },
   {
     "symbol": "CROMPTON",
-    "lotSize": 1800
+    "lotSize": 1800,
+    "instrument_key": "NSE_EQ|INE299U01018"
   },
   {
     "symbol": "DIVISLAB",
-    "lotSize": 100
+    "lotSize": 100,
+    "instrument_key": "NSE_EQ|INE361B01024"
   },
   {
     "symbol": "DMART",
-    "lotSize": 150
+    "lotSize": 150,
+    "instrument_key": "NSE_EQ|INE192R01011"
   },
   {
     "symbol": "DRREDDY",
-    "lotSize": 625
+    "lotSize": 625,
+    "instrument_key": "NSE_EQ|INE089A01031"
   },
   {
     "symbol": "ABCAPITAL",
-    "lotSize": 3100
+    "lotSize": 3100,
+    "instrument_key": "NSE_EQ|INE674K01013"
   },
   {
     "symbol": "EICHERMOT",
-    "lotSize": 100
+    "lotSize": 100,
+    "instrument_key": "NSE_EQ|INE066A01021"
   },
   {
     "symbol": "EXIDEIND",
-    "lotSize": 1800
+    "lotSize": 1800,
+    "instrument_key": "NSE_EQ|INE302A01020"
   },
   {
     "symbol": "FEDERALBNK",
-    "lotSize": 5000
+    "lotSize": 5000,
+    "instrument_key": "NSE_EQ|INE171A01029"
   },
   {
     "symbol": "FORTIS",
-    "lotSize": 775
+    "lotSize": 775,
+    "instrument_key": "NSE_EQ|INE061F01013"
   },
   {
     "symbol": "GAIL",
-    "lotSize": 3150
+    "lotSize": 3150,
+    "instrument_key": "NSE_EQ|INE129A01019"
   },
   {
     "symbol": "GLENMARK",
-    "lotSize": 375
+    "lotSize": 375,
+    "instrument_key": "NSE_EQ|INE935A01035"
   },
   {
     "symbol": "BEL",
-    "lotSize": 1425
+    "lotSize": 1425,
+    "instrument_key": "NSE_EQ|INE263A01024"
   },
   {
     "symbol": "GODREJPROP",
-    "lotSize": 275
+    "lotSize": 275,
+    "instrument_key": "NSE_EQ|INE484J01027"
   },
   {
     "symbol": "HAL",
-    "lotSize": 150
+    "lotSize": 150,
+    "instrument_key": "NSE_EQ|INE066F01020"
   },
   {
     "symbol": "HAVELLS",
-    "lotSize": 500
+    "lotSize": 500,
+    "instrument_key": "NSE_EQ|INE176B01034"
   },
   {
     "symbol": "BHARTIARTL",
-    "lotSize": 475
+    "lotSize": 475,
+    "instrument_key": "NSE_EQ|INE397D01024"
   },
   {
     "symbol": "HCLTECH",
-    "lotSize": 350
+    "lotSize": 350,
+    "instrument_key": "NSE_EQ|INE860A01027"
   },
   {
     "symbol": "HDFCAMC",
-    "lotSize": 300
+    "lotSize": 300,
+    "instrument_key": "NSE_EQ|INE127D01025"
   },
   {
     "symbol": "BHEL",
-    "lotSize": 2625
+    "lotSize": 2625,
+    "instrument_key": "NSE_EQ|INE257A01026"
   },
   {
     "symbol": "HEROMOTOCO",
-    "lotSize": 150
+    "lotSize": 150,
+    "instrument_key": "NSE_EQ|INE158A01026"
   },
   {
     "symbol": "HINDALCO",
-    "lotSize": 700
+    "lotSize": 700,
+    "instrument_key": "NSE_EQ|INE038A01020"
   },
   {
     "symbol": "BRITANNIA",
-    "lotSize": 125
+    "lotSize": 125,
+    "instrument_key": "NSE_EQ|INE216A01030"
   },
   {
     "symbol": "HINDPETRO",
-    "lotSize": 2025
+    "lotSize": 2025,
+    "instrument_key": "NSE_EQ|INE094A01015"
   },
   {
     "symbol": "CAMS",
-    "lotSize": 750
+    "lotSize": 750,
+    "instrument_key": "NSE_EQ|INE596I01020"
   },
   {
     "symbol": "CGPOWER",
-    "lotSize": 850
+    "lotSize": 850,
+    "instrument_key": "NSE_EQ|INE067A01029"
   },
   {
     "symbol": "HINDUNILVR",
-    "lotSize": 300
+    "lotSize": 300,
+    "instrument_key": "NSE_EQ|INE030A01027"
   },
   {
     "symbol": "ICICIBANK",
-    "lotSize": 700
+    "lotSize": 700,
+    "instrument_key": "NSE_EQ|INE090A01021"
   },
   {
     "symbol": "ICICIGI",
-    "lotSize": 325
+    "lotSize": 325,
+    "instrument_key": "NSE_EQ|INE765G01017"
   },
   {
     "symbol": "ICICIPRULI",
-    "lotSize": 925
+    "lotSize": 925,
+    "instrument_key": "NSE_EQ|INE726G01019"
   },
   {
     "symbol": "IEX",
-    "lotSize": 3750
+    "lotSize": 3750,
+    "instrument_key": "NSE_EQ|INE022Q01020"
   },
   {
     "symbol": "INDIGO",
-    "lotSize": 150
+    "lotSize": 150,
+    "instrument_key": "NSE_EQ|INE646L01027"
   },
   {
     "symbol": "INDUSINDBK",
-    "lotSize": 700
+    "lotSize": 700,
+    "instrument_key": "NSE_EQ|INE095A01012"
   },
   {
     "symbol": "INDUSTOWER",
-    "lotSize": 1700
+    "lotSize": 1700,
+    "instrument_key": "NSE_EQ|INE121J01017"
   },
   {
     "symbol": "INFY",
-    "lotSize": 400
+    "lotSize": 400,
+    "instrument_key": "NSE_EQ|INE009A01021"
   },
   {
     "symbol": "CONCOR",
-    "lotSize": 1250
+    "lotSize": 1250,
+    "instrument_key": "NSE_EQ|INE111A01025"
   },
   {
     "symbol": "IOC",
-    "lotSize": 4875
+    "lotSize": 4875,
+    "instrument_key": "NSE_EQ|INE242A01010"
   },
   {
     "symbol": "CUMMINSIND",
-    "lotSize": 200
+    "lotSize": 200,
+    "instrument_key": "NSE_EQ|INE298A01020"
   },
   {
     "symbol": "IREDA",
-    "lotSize": 3450
+    "lotSize": 3450,
+    "instrument_key": "NSE_EQ|INE202E01016"
   },
   {
     "symbol": "DABUR",
-    "lotSize": 1250
+    "lotSize": 1250,
+    "instrument_key": "NSE_EQ|INE016A01026"
   },
   {
     "symbol": "DALBHARAT",
-    "lotSize": 325
+    "lotSize": 325,
+    "instrument_key": "NSE_EQ|INE00R701025"
   },
   {
     "symbol": "DELHIVERY",
-    "lotSize": 2075
+    "lotSize": 2075,
+    "instrument_key": "NSE_EQ|INE148O01028"
   },
   {
     "symbol": "IRFC",
-    "lotSize": 4250
+    "lotSize": 4250,
+    "instrument_key": "NSE_EQ|INE053F01010"
   },
   {
     "symbol": "DIXON",
-    "lotSize": 50
+    "lotSize": 50,
+    "instrument_key": "NSE_EQ|INE935N01020"
   },
   {
     "symbol": "DLF",
-    "lotSize": 825
+    "lotSize": 825,
+    "instrument_key": "NSE_EQ|INE271C01023"
   },
   {
     "symbol": "AXISBANK",
-    "lotSize": 625
+    "lotSize": 625,
+    "instrument_key": "NSE_EQ|INE238A01034"
   },
   {
     "symbol": "BAJFINANCE",
-    "lotSize": 750
+    "lotSize": 750,
+    "instrument_key": "NSE_EQ|INE296A01032"
   },
   {
     "symbol": "JINDALSTEL",
-    "lotSize": 625
+    "lotSize": 625,
+    "instrument_key": "NSE_EQ|INE749A01030"
   },
   {
     "symbol": "JIOFIN",
-    "lotSize": 2350
+    "lotSize": 2350,
+    "instrument_key": "NSE_EQ|INE758E01017"
   },
   {
     "symbol": "ETERNAL",
-    "lotSize": 2425
+    "lotSize": 2425,
+    "instrument_key": "NSE_EQ|INE758T01015"
   },
   {
     "symbol": "JSWSTEEL",
-    "lotSize": 675
+    "lotSize": 675,
+    "instrument_key": "NSE_EQ|INE019A01038"
   },
   {
     "symbol": "KAYNES",
-    "lotSize": 100
+    "lotSize": 100,
+    "instrument_key": "NSE_EQ|INE918Z01012"
   },
   {
     "symbol": "BANKINDIA",
-    "lotSize": 5200
+    "lotSize": 5200,
+    "instrument_key": "NSE_EQ|INE084A01016"
   },
   {
     "symbol": "KEI",
-    "lotSize": 175
+    "lotSize": 175,
+    "instrument_key": "NSE_EQ|INE878B01027"
   },
   {
     "symbol": "BDL",
-    "lotSize": 350
+    "lotSize": 350,
+    "instrument_key": "NSE_EQ|INE171Z01026"
   },
   {
     "symbol": "GRASIM",
-    "lotSize": 250
+    "lotSize": 250,
+    "instrument_key": "NSE_EQ|INE047A01021"
   },
   {
     "symbol": "KOTAKBANK",
-    "lotSize": 2000
+    "lotSize": 2000,
+    "instrument_key": "NSE_EQ|INE237A01036"
   },
   {
     "symbol": "KPITTECH",
-    "lotSize": 425
+    "lotSize": 425,
+    "instrument_key": "NSE_EQ|INE04I401011"
   },
   {
     "symbol": "LAURUSLABS",
-    "lotSize": 850
+    "lotSize": 850,
+    "instrument_key": "NSE_EQ|INE947Q01028"
   },
   {
     "symbol": "HINDZINC",
-    "lotSize": 1225
+    "lotSize": 1225,
+    "instrument_key": "NSE_EQ|INE267A01025"
   },
   {
     "symbol": "HUDCO",
-    "lotSize": 2775
+    "lotSize": 2775,
+    "instrument_key": "NSE_EQ|INE031A01017"
   },
   {
     "symbol": "IDFCFIRSTB",
-    "lotSize": 9275
+    "lotSize": 9275,
+    "instrument_key": "NSE_EQ|INE092T01019"
   },
   {
     "symbol": "INDIANB",
-    "lotSize": 1000
+    "lotSize": 1000,
+    "instrument_key": "NSE_EQ|INE562A01011"
   },
   {
     "symbol": "INOXWIND",
-    "lotSize": 3575
+    "lotSize": 3575,
+    "instrument_key": "NSE_EQ|INE066P01011"
   },
   {
     "symbol": "BLUESTARCO",
-    "lotSize": 325
+    "lotSize": 325,
+    "instrument_key": "NSE_EQ|INE472A01039"
   },
   {
     "symbol": "LICHSGFIN",
-    "lotSize": 1000
+    "lotSize": 1000,
+    "instrument_key": "NSE_EQ|INE115A01026"
   },
   {
     "symbol": "LICI",
-    "lotSize": 700
+    "lotSize": 700,
+    "instrument_key": "NSE_EQ|INE0J1Y01017"
   },
   {
     "symbol": "LODHA",
-    "lotSize": 450
+    "lotSize": 450,
+    "instrument_key": "NSE_EQ|INE670K01029"
   },
   {
     "symbol": "BSE",
-    "lotSize": 375
+    "lotSize": 375,
+    "instrument_key": "NSE_EQ|INE118H01025"
   },
   {
     "symbol": "JUBLFOOD",
-    "lotSize": 1250
+    "lotSize": 1250,
+    "instrument_key": "NSE_EQ|INE797F01020"
   },
   {
     "symbol": "LT",
-    "lotSize": 175
+    "lotSize": 175,
+    "instrument_key": "NSE_EQ|INE018A01030"
   },
   {
     "symbol": "KFINTECH",
-    "lotSize": 500
+    "lotSize": 500,
+    "instrument_key": "NSE_EQ|INE138Y01010"
   },
   {
     "symbol": "LTF",
-    "lotSize": 2250
+    "lotSize": 2250,
+    "instrument_key": "NSE_EQ|INE498L01015"
   },
   {
     "symbol": "CDSL",
-    "lotSize": 475
+    "lotSize": 475,
+    "instrument_key": "NSE_EQ|INE736A01011"
   },
   {
     "symbol": "LTM",
-    "lotSize": 150
+    "lotSize": 150,
+    "instrument_key": "NSE_EQ|INE214T01019"
   },
   {
     "symbol": "MANAPPURAM",
-    "lotSize": 3000
+    "lotSize": 3000,
+    "instrument_key": "NSE_EQ|INE522D01027"
   },
   {
     "symbol": "LUPIN",
-    "lotSize": 425
+    "lotSize": 425,
+    "instrument_key": "NSE_EQ|INE326A01037"
   },
   {
     "symbol": "MANKIND",
-    "lotSize": 225
+    "lotSize": 225,
+    "instrument_key": "NSE_EQ|INE634S01028"
   },
   {
     "symbol": "MARICO",
-    "lotSize": 1200
+    "lotSize": 1200,
+    "instrument_key": "NSE_EQ|INE196A01026"
   },
   {
     "symbol": "MARUTI",
-    "lotSize": 50
+    "lotSize": 50,
+    "instrument_key": "NSE_EQ|INE585B01010"
   },
   {
     "symbol": "MCX",
-    "lotSize": 625
+    "lotSize": 625,
+    "instrument_key": "NSE_EQ|INE745G01043"
   },
   {
     "symbol": "MOTHERSON",
-    "lotSize": 6150
+    "lotSize": 6150,
+    "instrument_key": "NSE_EQ|INE775A01035"
   },
   {
     "symbol": "NATIONALUM",
-    "lotSize": 3750
+    "lotSize": 3750,
+    "instrument_key": "NSE_EQ|INE139A01034"
   },
   {
     "symbol": "NAUKRI",
-    "lotSize": 375
+    "lotSize": 375,
+    "instrument_key": "NSE_EQ|INE663F01032"
   },
   {
     "symbol": "NMDC",
-    "lotSize": 6750
+    "lotSize": 6750,
+    "instrument_key": "NSE_EQ|INE584A01023"
   },
   {
     "symbol": "NYKAA",
-    "lotSize": 3125
+    "lotSize": 3125,
+    "instrument_key": "NSE_EQ|INE388Y01029"
   },
   {
     "symbol": "MAXHEALTH",
-    "lotSize": 525
+    "lotSize": 525,
+    "instrument_key": "NSE_EQ|INE027H01010"
   },
   {
     "symbol": "ONGC",
-    "lotSize": 2250
+    "lotSize": 2250,
+    "instrument_key": "NSE_EQ|INE213A01029"
   },
   {
     "symbol": "COFORGE",
-    "lotSize": 375
+    "lotSize": 375,
+    "instrument_key": "NSE_EQ|INE591G01025"
   },
   {
     "symbol": "PETRONET",
-    "lotSize": 1900
+    "lotSize": 1900,
+    "instrument_key": "NSE_EQ|INE347G01014"
   },
   {
     "symbol": "MAZDOCK",
-    "lotSize": 200
+    "lotSize": 200,
+    "instrument_key": "NSE_EQ|INE249Z01020"
   },
   {
     "symbol": "PFC",
-    "lotSize": 1300
+    "lotSize": 1300,
+    "instrument_key": "NSE_EQ|INE134E01011"
   },
   {
     "symbol": "PIDILITIND",
-    "lotSize": 500
+    "lotSize": 500,
+    "instrument_key": "NSE_EQ|INE318A01026"
   },
   {
     "symbol": "PIIND",
-    "lotSize": 175
+    "lotSize": 175,
+    "instrument_key": "NSE_EQ|INE603J01030"
   },
   {
     "symbol": "PNBHOUSING",
-    "lotSize": 650
+    "lotSize": 650,
+    "instrument_key": "NSE_EQ|INE572E01012"
   },
   {
     "symbol": "POLICYBZR",
-    "lotSize": 350
+    "lotSize": 350,
+    "instrument_key": "NSE_EQ|INE417T01026"
   },
   {
     "symbol": "POLYCAB",
-    "lotSize": 125
+    "lotSize": 125,
+    "instrument_key": "NSE_EQ|INE455K01017"
   },
   {
     "symbol": "PREMIERENE",
-    "lotSize": 575
+    "lotSize": 575,
+    "instrument_key": "NSE_EQ|INE0BS701011"
   },
   {
     "symbol": "RELIANCE",
-    "lotSize": 500
+    "lotSize": 500,
+    "instrument_key": "NSE_EQ|INE002A01018"
   },
   {
     "symbol": "MFSL",
-    "lotSize": 400
+    "lotSize": 400,
+    "instrument_key": "NSE_EQ|INE180A01020"
   },
   {
     "symbol": "SAMMAANCAP",
-    "lotSize": 4300
+    "lotSize": 4300,
+    "instrument_key": "NSE_EQ|INE148I01020"
   },
   {
     "symbol": "SBIN",
-    "lotSize": 750
+    "lotSize": 750,
+    "instrument_key": "NSE_EQ|INE062A01020"
   },
   {
     "symbol": "SHRIRAMFIN",
-    "lotSize": 825
+    "lotSize": 825,
+    "instrument_key": "NSE_EQ|INE721A01047"
   },
   {
     "symbol": "SOLARINDS",
-    "lotSize": 50
+    "lotSize": 50,
+    "instrument_key": "NSE_EQ|INE343H01029"
   },
   {
     "symbol": "SONACOMS",
-    "lotSize": 1225
+    "lotSize": 1225,
+    "instrument_key": "NSE_EQ|INE073K01018"
   },
   {
     "symbol": "SRF",
-    "lotSize": 200
+    "lotSize": 200,
+    "instrument_key": "NSE_EQ|INE647A01010"
   },
   {
     "symbol": "NBCC",
-    "lotSize": 6500
+    "lotSize": 6500,
+    "instrument_key": "NSE_EQ|INE095N01031"
   },
   {
     "symbol": "SUNPHARMA",
-    "lotSize": 350
+    "lotSize": 350,
+    "instrument_key": "NSE_EQ|INE044A01036"
   },
   {
     "symbol": "NHPC",
-    "lotSize": 6400
+    "lotSize": 6400,
+    "instrument_key": "NSE_EQ|INE848E01016"
   },
   {
     "symbol": "SUPREMEIND",
-    "lotSize": 175
+    "lotSize": 175,
+    "instrument_key": "NSE_EQ|INE195A01028"
   },
   {
     "symbol": "SWIGGY",
-    "lotSize": 1300
+    "lotSize": 1300,
+    "instrument_key": "NSE_EQ|INE00H001014"
   },
   {
     "symbol": "NTPC",
-    "lotSize": 1500
+    "lotSize": 1500,
+    "instrument_key": "NSE_EQ|INE733E01010"
   },
   {
     "symbol": "TATACONSUM",
-    "lotSize": 550
+    "lotSize": 550,
+    "instrument_key": "NSE_EQ|INE192A01025"
   },
   {
     "symbol": "TATAELXSI",
-    "lotSize": 100
+    "lotSize": 100,
+    "instrument_key": "NSE_EQ|INE670A01012"
   },
   {
     "symbol": "NUVAMA",
-    "lotSize": 500
+    "lotSize": 500,
+    "instrument_key": "NSE_EQ|INE531F01023"
   },
   {
     "symbol": "OBEROIRLTY",
-    "lotSize": 350
+    "lotSize": 350,
+    "instrument_key": "NSE_EQ|INE093I01010"
   },
   {
     "symbol": "HDFCBANK",
-    "lotSize": 550
+    "lotSize": 550,
+    "instrument_key": "NSE_EQ|INE040A01034"
   },
   {
     "symbol": "TATATECH",
-    "lotSize": 800
+    "lotSize": 800,
+    "instrument_key": "NSE_EQ|INE142M01025"
   },
   {
     "symbol": "OIL",
-    "lotSize": 1400
+    "lotSize": 1400,
+    "instrument_key": "NSE_EQ|INE274J01014"
   },
   {
     "symbol": "TCS",
-    "lotSize": 175
+    "lotSize": 175,
+    "instrument_key": "NSE_EQ|INE467B01029"
   },
   {
     "symbol": "HDFCLIFE",
-    "lotSize": 1100
+    "lotSize": 1100,
+    "instrument_key": "NSE_EQ|INE795G01014"
   },
   {
     "symbol": "TIINDIA",
-    "lotSize": 200
+    "lotSize": 200,
+    "instrument_key": "NSE_EQ|INE974X01010"
   },
   {
     "symbol": "TORNTPOWER",
-    "lotSize": 425
+    "lotSize": 425,
+    "instrument_key": "NSE_EQ|INE813H01021"
   },
   {
     "symbol": "TVSMOTOR",
-    "lotSize": 175
+    "lotSize": 175,
+    "instrument_key": "NSE_EQ|INE494B01023"
   },
   {
     "symbol": "UNITDSPR",
-    "lotSize": 400
+    "lotSize": 400,
+    "instrument_key": "NSE_EQ|INE854D01024"
   },
   {
     "symbol": "UNOMINDA",
-    "lotSize": 550
+    "lotSize": 550,
+    "instrument_key": "NSE_EQ|INE405E01023"
   },
   {
     "symbol": "UPL",
-    "lotSize": 1355
+    "lotSize": 1355,
+    "instrument_key": "NSE_EQ|INE628A01036"
   },
   {
     "symbol": "VBL",
-    "lotSize": 1125
+    "lotSize": 1125,
+    "instrument_key": "NSE_EQ|INE200M01039"
   },
   {
     "symbol": "VEDL",
-    "lotSize": 1150
+    "lotSize": 1150,
+    "instrument_key": "NSE_EQ|INE205A01025"
   },
   {
     "symbol": "VOLTAS",
-    "lotSize": 375
+    "lotSize": 375,
+    "instrument_key": "NSE_EQ|INE226A01021"
   },
   {
     "symbol": "WAAREEENER",
-    "lotSize": 175
+    "lotSize": 175,
+    "instrument_key": "NSE_EQ|INE377N01017"
   },
   {
     "symbol": "ZYDUSLIFE",
-    "lotSize": 900
+    "lotSize": 900,
+    "instrument_key": "NSE_EQ|INE010B01027"
   },
   {
     "symbol": "PAYTM",
-    "lotSize": 725
+    "lotSize": 725,
+    "instrument_key": "NSE_EQ|INE982J01020"
   },
   {
     "symbol": "PGEL",
-    "lotSize": 950
+    "lotSize": 950,
+    "instrument_key": "NSE_EQ|INE457L01029"
   },
   {
     "symbol": "ITC",
-    "lotSize": 1600
+    "lotSize": 1600,
+    "instrument_key": "NSE_EQ|INE154A01025"
   },
   {
     "symbol": "JSWENERGY",
-    "lotSize": 1000
+    "lotSize": 1000,
+    "instrument_key": "NSE_EQ|INE121E01018"
   },
   {
     "symbol": "POWERGRID",
-    "lotSize": 1900
+    "lotSize": 1900,
+    "instrument_key": "NSE_EQ|INE752E01010"
   },
   {
     "symbol": "POWERINDIA",
-    "lotSize": 50
+    "lotSize": 50,
+    "instrument_key": "NSE_EQ|INE07Y701011"
   },
   {
     "symbol": "PRESTIGE",
-    "lotSize": 450
+    "lotSize": 450,
+    "instrument_key": "NSE_EQ|INE811K01011"
   },
   {
     "symbol": "RECLTD",
-    "lotSize": 1400
+    "lotSize": 1400,
+    "instrument_key": "NSE_EQ|INE020B01018"
   },
   {
     "symbol": "RVNL",
-    "lotSize": 1525
+    "lotSize": 1525,
+    "instrument_key": "NSE_EQ|INE415G01027"
   },
   {
     "symbol": "SBICARD",
-    "lotSize": 800
+    "lotSize": 800,
+    "instrument_key": "NSE_EQ|INE018E01016"
   },
   {
     "symbol": "SBILIFE",
-    "lotSize": 375
+    "lotSize": 375,
+    "instrument_key": "NSE_EQ|INE123W01016"
   },
   {
     "symbol": "SIEMENS",
-    "lotSize": 175
+    "lotSize": 175,
+    "instrument_key": "NSE_EQ|INE003A01024"
   },
   {
     "symbol": "MUTHOOTFIN",
-    "lotSize": 275
+    "lotSize": 275,
+    "instrument_key": "NSE_EQ|INE414G01012"
   },
   {
     "symbol": "OFSS",
-    "lotSize": 75
+    "lotSize": 75,
+    "instrument_key": "NSE_EQ|INE881D01027"
   },
   {
     "symbol": "PAGEIND",
-    "lotSize": 15
+    "lotSize": 15,
+    "instrument_key": "NSE_EQ|INE761H01022"
   },
   {
     "symbol": "PHOENIXLTD",
-    "lotSize": 350
+    "lotSize": 350,
+    "instrument_key": "NSE_EQ|INE211B01039"
   },
   {
     "symbol": "SUZLON",
-    "lotSize": 9025
+    "lotSize": 9025,
+    "instrument_key": "NSE_EQ|INE040H01021"
   },
   {
     "symbol": "RBLBANK",
-    "lotSize": 3175
+    "lotSize": 3175,
+    "instrument_key": "NSE_EQ|INE976G01028"
   },
   {
     "symbol": "GMRAIRPORT",
-    "lotSize": 6975
+    "lotSize": 6975,
+    "instrument_key": "NSE_EQ|INE776C01039"
   },
   {
     "symbol": "TATAPOWER",
-    "lotSize": 1450
+    "lotSize": 1450,
+    "instrument_key": "NSE_EQ|INE245A01021"
   },
   {
     "symbol": "SHREECEM",
-    "lotSize": 25
+    "lotSize": 25,
+    "instrument_key": "NSE_EQ|INE070A01015"
   },
   {
     "symbol": "TATASTEEL",
-    "lotSize": 5500
+    "lotSize": 5500,
+    "instrument_key": "NSE_EQ|INE081A01020"
   },
   {
     "symbol": "TRENT",
-    "lotSize": 100
+    "lotSize": 100,
+    "instrument_key": "NSE_EQ|INE849A01020"
   },
   {
     "symbol": "ULTRACEMCO",
-    "lotSize": 50
+    "lotSize": 50,
+    "instrument_key": "NSE_EQ|INE481G01011"
   },
   {
     "symbol": "UNIONBANK",
-    "lotSize": 4425
+    "lotSize": 4425,
+    "instrument_key": "NSE_EQ|INE692A01016"
   },
   {
     "symbol": "TITAN",
-    "lotSize": 175
+    "lotSize": 175,
+    "instrument_key": "NSE_EQ|INE280A01028"
   },
   {
     "symbol": "TMPV",
-    "lotSize": 800
+    "lotSize": 800,
+    "instrument_key": "NSE_EQ|INE155A01022"
   },
   {
     "symbol": "WIPRO",
-    "lotSize": 3000
+    "lotSize": 3000,
+    "instrument_key": "NSE_EQ|INE075A01022"
   },
   {
     "symbol": "YESBANK",
-    "lotSize": 31100
+    "lotSize": 31100,
+    "instrument_key": "NSE_EQ|INE528G01035"
   },
   {
     "symbol": "ASHOKLEY",
-    "lotSize": 5000
+    "lotSize": 5000,
+    "instrument_key": "NSE_EQ|INE208A01029"
   },
   {
     "symbol": "BAJAJFINSV",
-    "lotSize": 250
+    "lotSize": 250,
+    "instrument_key": "NSE_EQ|INE918I01026"
   },
   {
     "symbol": "GODREJCP",
-    "lotSize": 500
+    "lotSize": 500,
+    "instrument_key": "NSE_EQ|INE102D01028"
   },
   {
     "symbol": "PATANJALI",
-    "lotSize": 900
+    "lotSize": 900,
+    "instrument_key": "NSE_EQ|INE619A01035"
   },
   {
     "symbol": "PERSISTENT",
-    "lotSize": 100
+    "lotSize": 100,
+    "instrument_key": "NSE_EQ|INE262H01021"
   },
   {
     "symbol": "INDHOTEL",
-    "lotSize": 1000
+    "lotSize": 1000,
+    "instrument_key": "NSE_EQ|INE053A01029"
   },
   {
     "symbol": "PNB",
-    "lotSize": 8000
+    "lotSize": 8000,
+    "instrument_key": "NSE_EQ|INE160A01022"
   },
   {
     "symbol": "M&M",
-    "lotSize": 200
+    "lotSize": 200,
+    "instrument_key": "NSE_EQ|INE101A01026"
   },
   {
     "symbol": "NESTLEIND",
-    "lotSize": 500
+    "lotSize": 500,
+    "instrument_key": "NSE_EQ|INE239A01024"
   },
   {
     "symbol": "PPLPHARMA",
-    "lotSize": 2625
+    "lotSize": 2625,
+    "instrument_key": "NSE_EQ|INE0DK501011"
   },
   {
     "symbol": "KALYANKJIL",
-    "lotSize": 1175
+    "lotSize": 1175,
+    "instrument_key": "NSE_EQ|INE303R01014"
   },
   {
     "symbol": "IDEA",
-    "lotSize": 71475
+    "lotSize": 71475,
+    "instrument_key": "NSE_EQ|INE669E01016"
   },
   {
     "symbol": "TECHM",
-    "lotSize": 600
+    "lotSize": 600,
+    "instrument_key": "NSE_EQ|INE669C01036"
   },
   {
     "symbol": "SAIL",
-    "lotSize": 4700
+    "lotSize": 4700,
+    "instrument_key": "NSE_EQ|INE114A01011"
   },
   {
     "symbol": "MPHASIS",
-    "lotSize": 275
+    "lotSize": 275,
+    "instrument_key": "NSE_EQ|INE356A01018"
   },
   {
     "symbol": "TORNTPHARM",
-    "lotSize": 250
+    "lotSize": 250,
+    "instrument_key": "NSE_EQ|INE685A01028"
   },
   {
     "symbol": "ADANIPOWER",
-    "lotSize": 3550
+    "lotSize": 3550,
+    "instrument_key": "NSE_EQ|INE814H01029"
   },
   {
     "symbol": "COCHINSHIP",
-    "lotSize": 400
+    "lotSize": 400,
+    "instrument_key": "NSE_EQ|INE704P01025"
   },
   {
     "symbol": "FORCEMOT",
-    "lotSize": 25
+    "lotSize": 25,
+    "instrument_key": "NSE_EQ|INE451A01017"
   },
   {
     "symbol": "GODFRYPHLP",
-    "lotSize": 275
+    "lotSize": 275,
+    "instrument_key": "NSE_EQ|INE260B01028"
   },
   {
     "symbol": "HYUNDAI",
-    "lotSize": 275
+    "lotSize": 275,
+    "instrument_key": "NSE_EQ|INE0V6F01027"
   },
   {
     "symbol": "MOTILALOFS",
-    "lotSize": 775
+    "lotSize": 775,
+    "instrument_key": "NSE_EQ|INE338I01027"
   },
   {
     "symbol": "NAM-INDIA",
-    "lotSize": 625
+    "lotSize": 625,
+    "instrument_key": "NSE_EQ|INE298J01013"
   },
   {
     "symbol": "VMM",
-    "lotSize": 4850
+    "lotSize": 4850,
+    "instrument_key": "NSE_EQ|INE01EA01019"
   }
 ]
