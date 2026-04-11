@@ -99,13 +99,30 @@ const getUpstoxOptionChain = async (symbol, strikecount) => {
 
 
 const getSymbols = (req, res) => {
-  const symbols = [
-    { label: "NIFTY 50", value: "NSE:NIFTY50-INDEX" },
-    { label: "BANK NIFTY", value: "NSE:NIFTYBANK-INDEX" },
-    { label: "FIN NIFTY", value: "NSE:FINNIFTY-INDEX" },
-    { label: "SENSEX", value: "BSE:SENSEX-INDEX" }
+  const indices = [
+    { label: "NIFTY 50", value: "NSE:NIFTY50-INDEX", lotSize: 25 },
+    { label: "BANK NIFTY", value: "NSE:NIFTYBANK-INDEX", lotSize: 15 },
+    { label: "FIN NIFTY", value: "NSE:FINNIFTY-INDEX", lotSize: 25 },
+    { label: "SENSEX", value: "BSE:SENSEX-INDEX", lotSize: 10 }
   ];
-  res.json(symbols);
+
+  try {
+    const foStocks = require('./fo_mktlots.json');
+    // Filter out standard indices from the raw csv list
+    const indexSymbols = ['NIFTY', 'BANKNIFTY', 'FINNIFTY', 'MIDCPNIFTY', 'NIFTYNXT50'];
+    const equities = foStocks
+      .filter(item => !indexSymbols.includes(item.symbol))
+      .map(item => ({
+        label: item.symbol,
+        value: `NSE_EQ|${item.symbol}`,
+        lotSize: item.lotSize
+      }));
+    
+    res.json([...indices, ...equities]);
+  } catch (e) {
+    console.error("Failed to load FO lot sizes:", e.message);
+    res.json(indices);
+  }
 };
 
 module.exports = {

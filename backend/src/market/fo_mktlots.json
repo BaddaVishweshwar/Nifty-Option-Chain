@@ -1,0 +1,874 @@
+[
+  {
+    "symbol": "NIFTY",
+    "lotSize": 65
+  },
+  {
+    "symbol": "BANKNIFTY",
+    "lotSize": 30
+  },
+  {
+    "symbol": "NIFTYNXT50",
+    "lotSize": 25
+  },
+  {
+    "symbol": "FINNIFTY",
+    "lotSize": 60
+  },
+  {
+    "symbol": "MIDCPNIFTY",
+    "lotSize": 120
+  },
+  {
+    "symbol": "360ONE",
+    "lotSize": 500
+  },
+  {
+    "symbol": "ABB",
+    "lotSize": 125
+  },
+  {
+    "symbol": "ADANIENT",
+    "lotSize": 309
+  },
+  {
+    "symbol": "ADANIGREEN",
+    "lotSize": 600
+  },
+  {
+    "symbol": "ADANIPORTS",
+    "lotSize": 475
+  },
+  {
+    "symbol": "ALKEM",
+    "lotSize": 125
+  },
+  {
+    "symbol": "AMBER",
+    "lotSize": 100
+  },
+  {
+    "symbol": "AMBUJACEM",
+    "lotSize": 1050
+  },
+  {
+    "symbol": "ANGELONE",
+    "lotSize": 2500
+  },
+  {
+    "symbol": "APLAPOLLO",
+    "lotSize": 350
+  },
+  {
+    "symbol": "APOLLOHOSP",
+    "lotSize": 125
+  },
+  {
+    "symbol": "ASTRAL",
+    "lotSize": 425
+  },
+  {
+    "symbol": "AUBANK",
+    "lotSize": 1000
+  },
+  {
+    "symbol": "AUROPHARMA",
+    "lotSize": 550
+  },
+  {
+    "symbol": "ADANIENSOL",
+    "lotSize": 675
+  },
+  {
+    "symbol": "BAJAJ-AUTO",
+    "lotSize": 75
+  },
+  {
+    "symbol": "BAJAJHLDNG",
+    "lotSize": 50
+  },
+  {
+    "symbol": "BANDHANBNK",
+    "lotSize": 3600
+  },
+  {
+    "symbol": "BANKBARODA",
+    "lotSize": 2925
+  },
+  {
+    "symbol": "BHARATFORG",
+    "lotSize": 500
+  },
+  {
+    "symbol": "BIOCON",
+    "lotSize": 2500
+  },
+  {
+    "symbol": "BOSCHLTD",
+    "lotSize": 25
+  },
+  {
+    "symbol": "ASIANPAINT",
+    "lotSize": 250
+  },
+  {
+    "symbol": "BPCL",
+    "lotSize": 1975
+  },
+  {
+    "symbol": "CANBK",
+    "lotSize": 6750
+  },
+  {
+    "symbol": "CHOLAFIN",
+    "lotSize": 625
+  },
+  {
+    "symbol": "CIPLA",
+    "lotSize": 375
+  },
+  {
+    "symbol": "COALINDIA",
+    "lotSize": 1350
+  },
+  {
+    "symbol": "COLPAL",
+    "lotSize": 225
+  },
+  {
+    "symbol": "CROMPTON",
+    "lotSize": 1800
+  },
+  {
+    "symbol": "DIVISLAB",
+    "lotSize": 100
+  },
+  {
+    "symbol": "DMART",
+    "lotSize": 150
+  },
+  {
+    "symbol": "DRREDDY",
+    "lotSize": 625
+  },
+  {
+    "symbol": "ABCAPITAL",
+    "lotSize": 3100
+  },
+  {
+    "symbol": "EICHERMOT",
+    "lotSize": 100
+  },
+  {
+    "symbol": "EXIDEIND",
+    "lotSize": 1800
+  },
+  {
+    "symbol": "FEDERALBNK",
+    "lotSize": 5000
+  },
+  {
+    "symbol": "FORTIS",
+    "lotSize": 775
+  },
+  {
+    "symbol": "GAIL",
+    "lotSize": 3150
+  },
+  {
+    "symbol": "GLENMARK",
+    "lotSize": 375
+  },
+  {
+    "symbol": "BEL",
+    "lotSize": 1425
+  },
+  {
+    "symbol": "GODREJPROP",
+    "lotSize": 275
+  },
+  {
+    "symbol": "HAL",
+    "lotSize": 150
+  },
+  {
+    "symbol": "HAVELLS",
+    "lotSize": 500
+  },
+  {
+    "symbol": "BHARTIARTL",
+    "lotSize": 475
+  },
+  {
+    "symbol": "HCLTECH",
+    "lotSize": 350
+  },
+  {
+    "symbol": "HDFCAMC",
+    "lotSize": 300
+  },
+  {
+    "symbol": "BHEL",
+    "lotSize": 2625
+  },
+  {
+    "symbol": "HEROMOTOCO",
+    "lotSize": 150
+  },
+  {
+    "symbol": "HINDALCO",
+    "lotSize": 700
+  },
+  {
+    "symbol": "BRITANNIA",
+    "lotSize": 125
+  },
+  {
+    "symbol": "HINDPETRO",
+    "lotSize": 2025
+  },
+  {
+    "symbol": "CAMS",
+    "lotSize": 750
+  },
+  {
+    "symbol": "CGPOWER",
+    "lotSize": 850
+  },
+  {
+    "symbol": "HINDUNILVR",
+    "lotSize": 300
+  },
+  {
+    "symbol": "ICICIBANK",
+    "lotSize": 700
+  },
+  {
+    "symbol": "ICICIGI",
+    "lotSize": 325
+  },
+  {
+    "symbol": "ICICIPRULI",
+    "lotSize": 925
+  },
+  {
+    "symbol": "IEX",
+    "lotSize": 3750
+  },
+  {
+    "symbol": "INDIGO",
+    "lotSize": 150
+  },
+  {
+    "symbol": "INDUSINDBK",
+    "lotSize": 700
+  },
+  {
+    "symbol": "INDUSTOWER",
+    "lotSize": 1700
+  },
+  {
+    "symbol": "INFY",
+    "lotSize": 400
+  },
+  {
+    "symbol": "CONCOR",
+    "lotSize": 1250
+  },
+  {
+    "symbol": "IOC",
+    "lotSize": 4875
+  },
+  {
+    "symbol": "CUMMINSIND",
+    "lotSize": 200
+  },
+  {
+    "symbol": "IREDA",
+    "lotSize": 3450
+  },
+  {
+    "symbol": "DABUR",
+    "lotSize": 1250
+  },
+  {
+    "symbol": "DALBHARAT",
+    "lotSize": 325
+  },
+  {
+    "symbol": "DELHIVERY",
+    "lotSize": 2075
+  },
+  {
+    "symbol": "IRFC",
+    "lotSize": 4250
+  },
+  {
+    "symbol": "DIXON",
+    "lotSize": 50
+  },
+  {
+    "symbol": "DLF",
+    "lotSize": 825
+  },
+  {
+    "symbol": "AXISBANK",
+    "lotSize": 625
+  },
+  {
+    "symbol": "BAJFINANCE",
+    "lotSize": 750
+  },
+  {
+    "symbol": "JINDALSTEL",
+    "lotSize": 625
+  },
+  {
+    "symbol": "JIOFIN",
+    "lotSize": 2350
+  },
+  {
+    "symbol": "ETERNAL",
+    "lotSize": 2425
+  },
+  {
+    "symbol": "JSWSTEEL",
+    "lotSize": 675
+  },
+  {
+    "symbol": "KAYNES",
+    "lotSize": 100
+  },
+  {
+    "symbol": "BANKINDIA",
+    "lotSize": 5200
+  },
+  {
+    "symbol": "KEI",
+    "lotSize": 175
+  },
+  {
+    "symbol": "BDL",
+    "lotSize": 350
+  },
+  {
+    "symbol": "GRASIM",
+    "lotSize": 250
+  },
+  {
+    "symbol": "KOTAKBANK",
+    "lotSize": 2000
+  },
+  {
+    "symbol": "KPITTECH",
+    "lotSize": 425
+  },
+  {
+    "symbol": "LAURUSLABS",
+    "lotSize": 850
+  },
+  {
+    "symbol": "HINDZINC",
+    "lotSize": 1225
+  },
+  {
+    "symbol": "HUDCO",
+    "lotSize": 2775
+  },
+  {
+    "symbol": "IDFCFIRSTB",
+    "lotSize": 9275
+  },
+  {
+    "symbol": "INDIANB",
+    "lotSize": 1000
+  },
+  {
+    "symbol": "INOXWIND",
+    "lotSize": 3575
+  },
+  {
+    "symbol": "BLUESTARCO",
+    "lotSize": 325
+  },
+  {
+    "symbol": "LICHSGFIN",
+    "lotSize": 1000
+  },
+  {
+    "symbol": "LICI",
+    "lotSize": 700
+  },
+  {
+    "symbol": "LODHA",
+    "lotSize": 450
+  },
+  {
+    "symbol": "BSE",
+    "lotSize": 375
+  },
+  {
+    "symbol": "JUBLFOOD",
+    "lotSize": 1250
+  },
+  {
+    "symbol": "LT",
+    "lotSize": 175
+  },
+  {
+    "symbol": "KFINTECH",
+    "lotSize": 500
+  },
+  {
+    "symbol": "LTF",
+    "lotSize": 2250
+  },
+  {
+    "symbol": "CDSL",
+    "lotSize": 475
+  },
+  {
+    "symbol": "LTM",
+    "lotSize": 150
+  },
+  {
+    "symbol": "MANAPPURAM",
+    "lotSize": 3000
+  },
+  {
+    "symbol": "LUPIN",
+    "lotSize": 425
+  },
+  {
+    "symbol": "MANKIND",
+    "lotSize": 225
+  },
+  {
+    "symbol": "MARICO",
+    "lotSize": 1200
+  },
+  {
+    "symbol": "MARUTI",
+    "lotSize": 50
+  },
+  {
+    "symbol": "MCX",
+    "lotSize": 625
+  },
+  {
+    "symbol": "MOTHERSON",
+    "lotSize": 6150
+  },
+  {
+    "symbol": "NATIONALUM",
+    "lotSize": 3750
+  },
+  {
+    "symbol": "NAUKRI",
+    "lotSize": 375
+  },
+  {
+    "symbol": "NMDC",
+    "lotSize": 6750
+  },
+  {
+    "symbol": "NYKAA",
+    "lotSize": 3125
+  },
+  {
+    "symbol": "MAXHEALTH",
+    "lotSize": 525
+  },
+  {
+    "symbol": "ONGC",
+    "lotSize": 2250
+  },
+  {
+    "symbol": "COFORGE",
+    "lotSize": 375
+  },
+  {
+    "symbol": "PETRONET",
+    "lotSize": 1900
+  },
+  {
+    "symbol": "MAZDOCK",
+    "lotSize": 200
+  },
+  {
+    "symbol": "PFC",
+    "lotSize": 1300
+  },
+  {
+    "symbol": "PIDILITIND",
+    "lotSize": 500
+  },
+  {
+    "symbol": "PIIND",
+    "lotSize": 175
+  },
+  {
+    "symbol": "PNBHOUSING",
+    "lotSize": 650
+  },
+  {
+    "symbol": "POLICYBZR",
+    "lotSize": 350
+  },
+  {
+    "symbol": "POLYCAB",
+    "lotSize": 125
+  },
+  {
+    "symbol": "PREMIERENE",
+    "lotSize": 575
+  },
+  {
+    "symbol": "RELIANCE",
+    "lotSize": 500
+  },
+  {
+    "symbol": "MFSL",
+    "lotSize": 400
+  },
+  {
+    "symbol": "SAMMAANCAP",
+    "lotSize": 4300
+  },
+  {
+    "symbol": "SBIN",
+    "lotSize": 750
+  },
+  {
+    "symbol": "SHRIRAMFIN",
+    "lotSize": 825
+  },
+  {
+    "symbol": "SOLARINDS",
+    "lotSize": 50
+  },
+  {
+    "symbol": "SONACOMS",
+    "lotSize": 1225
+  },
+  {
+    "symbol": "SRF",
+    "lotSize": 200
+  },
+  {
+    "symbol": "NBCC",
+    "lotSize": 6500
+  },
+  {
+    "symbol": "SUNPHARMA",
+    "lotSize": 350
+  },
+  {
+    "symbol": "NHPC",
+    "lotSize": 6400
+  },
+  {
+    "symbol": "SUPREMEIND",
+    "lotSize": 175
+  },
+  {
+    "symbol": "SWIGGY",
+    "lotSize": 1300
+  },
+  {
+    "symbol": "NTPC",
+    "lotSize": 1500
+  },
+  {
+    "symbol": "TATACONSUM",
+    "lotSize": 550
+  },
+  {
+    "symbol": "TATAELXSI",
+    "lotSize": 100
+  },
+  {
+    "symbol": "NUVAMA",
+    "lotSize": 500
+  },
+  {
+    "symbol": "OBEROIRLTY",
+    "lotSize": 350
+  },
+  {
+    "symbol": "HDFCBANK",
+    "lotSize": 550
+  },
+  {
+    "symbol": "TATATECH",
+    "lotSize": 800
+  },
+  {
+    "symbol": "OIL",
+    "lotSize": 1400
+  },
+  {
+    "symbol": "TCS",
+    "lotSize": 175
+  },
+  {
+    "symbol": "HDFCLIFE",
+    "lotSize": 1100
+  },
+  {
+    "symbol": "TIINDIA",
+    "lotSize": 200
+  },
+  {
+    "symbol": "TORNTPOWER",
+    "lotSize": 425
+  },
+  {
+    "symbol": "TVSMOTOR",
+    "lotSize": 175
+  },
+  {
+    "symbol": "UNITDSPR",
+    "lotSize": 400
+  },
+  {
+    "symbol": "UNOMINDA",
+    "lotSize": 550
+  },
+  {
+    "symbol": "UPL",
+    "lotSize": 1355
+  },
+  {
+    "symbol": "VBL",
+    "lotSize": 1125
+  },
+  {
+    "symbol": "VEDL",
+    "lotSize": 1150
+  },
+  {
+    "symbol": "VOLTAS",
+    "lotSize": 375
+  },
+  {
+    "symbol": "WAAREEENER",
+    "lotSize": 175
+  },
+  {
+    "symbol": "ZYDUSLIFE",
+    "lotSize": 900
+  },
+  {
+    "symbol": "PAYTM",
+    "lotSize": 725
+  },
+  {
+    "symbol": "PGEL",
+    "lotSize": 950
+  },
+  {
+    "symbol": "ITC",
+    "lotSize": 1600
+  },
+  {
+    "symbol": "JSWENERGY",
+    "lotSize": 1000
+  },
+  {
+    "symbol": "POWERGRID",
+    "lotSize": 1900
+  },
+  {
+    "symbol": "POWERINDIA",
+    "lotSize": 50
+  },
+  {
+    "symbol": "PRESTIGE",
+    "lotSize": 450
+  },
+  {
+    "symbol": "RECLTD",
+    "lotSize": 1400
+  },
+  {
+    "symbol": "RVNL",
+    "lotSize": 1525
+  },
+  {
+    "symbol": "SBICARD",
+    "lotSize": 800
+  },
+  {
+    "symbol": "SBILIFE",
+    "lotSize": 375
+  },
+  {
+    "symbol": "SIEMENS",
+    "lotSize": 175
+  },
+  {
+    "symbol": "MUTHOOTFIN",
+    "lotSize": 275
+  },
+  {
+    "symbol": "OFSS",
+    "lotSize": 75
+  },
+  {
+    "symbol": "PAGEIND",
+    "lotSize": 15
+  },
+  {
+    "symbol": "PHOENIXLTD",
+    "lotSize": 350
+  },
+  {
+    "symbol": "SUZLON",
+    "lotSize": 9025
+  },
+  {
+    "symbol": "RBLBANK",
+    "lotSize": 3175
+  },
+  {
+    "symbol": "GMRAIRPORT",
+    "lotSize": 6975
+  },
+  {
+    "symbol": "TATAPOWER",
+    "lotSize": 1450
+  },
+  {
+    "symbol": "SHREECEM",
+    "lotSize": 25
+  },
+  {
+    "symbol": "TATASTEEL",
+    "lotSize": 5500
+  },
+  {
+    "symbol": "TRENT",
+    "lotSize": 100
+  },
+  {
+    "symbol": "ULTRACEMCO",
+    "lotSize": 50
+  },
+  {
+    "symbol": "UNIONBANK",
+    "lotSize": 4425
+  },
+  {
+    "symbol": "TITAN",
+    "lotSize": 175
+  },
+  {
+    "symbol": "TMPV",
+    "lotSize": 800
+  },
+  {
+    "symbol": "WIPRO",
+    "lotSize": 3000
+  },
+  {
+    "symbol": "YESBANK",
+    "lotSize": 31100
+  },
+  {
+    "symbol": "ASHOKLEY",
+    "lotSize": 5000
+  },
+  {
+    "symbol": "BAJAJFINSV",
+    "lotSize": 250
+  },
+  {
+    "symbol": "GODREJCP",
+    "lotSize": 500
+  },
+  {
+    "symbol": "PATANJALI",
+    "lotSize": 900
+  },
+  {
+    "symbol": "PERSISTENT",
+    "lotSize": 100
+  },
+  {
+    "symbol": "INDHOTEL",
+    "lotSize": 1000
+  },
+  {
+    "symbol": "PNB",
+    "lotSize": 8000
+  },
+  {
+    "symbol": "M&M",
+    "lotSize": 200
+  },
+  {
+    "symbol": "NESTLEIND",
+    "lotSize": 500
+  },
+  {
+    "symbol": "PPLPHARMA",
+    "lotSize": 2625
+  },
+  {
+    "symbol": "KALYANKJIL",
+    "lotSize": 1175
+  },
+  {
+    "symbol": "IDEA",
+    "lotSize": 71475
+  },
+  {
+    "symbol": "TECHM",
+    "lotSize": 600
+  },
+  {
+    "symbol": "SAIL",
+    "lotSize": 4700
+  },
+  {
+    "symbol": "MPHASIS",
+    "lotSize": 275
+  },
+  {
+    "symbol": "TORNTPHARM",
+    "lotSize": 250
+  },
+  {
+    "symbol": "ADANIPOWER",
+    "lotSize": 3550
+  },
+  {
+    "symbol": "COCHINSHIP",
+    "lotSize": 400
+  },
+  {
+    "symbol": "FORCEMOT",
+    "lotSize": 25
+  },
+  {
+    "symbol": "GODFRYPHLP",
+    "lotSize": 275
+  },
+  {
+    "symbol": "HYUNDAI",
+    "lotSize": 275
+  },
+  {
+    "symbol": "MOTILALOFS",
+    "lotSize": 775
+  },
+  {
+    "symbol": "NAM-INDIA",
+    "lotSize": 625
+  },
+  {
+    "symbol": "VMM",
+    "lotSize": 4850
+  }
+]

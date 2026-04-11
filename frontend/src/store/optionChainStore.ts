@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { OptionStrike, TickUpdate } from '../types/optionChain';
 interface OptionChainState {
+  availableSymbols: { label: string, value: string, lotSize: number }[];
   selectedSymbol: string;
   selectedExpiry: string;
   chain: OptionStrike[];
@@ -10,8 +11,10 @@ interface OptionChainState {
   maxPain: number;
   connected: boolean;
   showLots: boolean;
+  lotSize: number;
   lastUpdate: Date | null;
 
+  setAvailableSymbols: (symbols: { label: string, value: string, lotSize: number }[]) => void;
   setSymbol: (symbol: string) => void;
   setExpiry: (expiry: string) => void;
   toggleLots: () => void;
@@ -22,6 +25,7 @@ interface OptionChainState {
 }
 
 export const useOptionChainStore = create<OptionChainState>((set) => ({
+  availableSymbols: [],
   selectedSymbol: 'NSE:NIFTYBANK-INDEX',
   selectedExpiry: '',
   chain: [],
@@ -31,9 +35,17 @@ export const useOptionChainStore = create<OptionChainState>((set) => ({
   maxPain: 0,
   connected: false,
   showLots: false,
+  lotSize: 15,
   lastUpdate: null,
 
-  setSymbol: (symbol: string) => set({ selectedSymbol: symbol }),
+  setAvailableSymbols: (symbols) => set((state) => {
+    const matched = symbols.find(s => s.value === state.selectedSymbol);
+    return { availableSymbols: symbols, lotSize: matched?.lotSize || state.lotSize };
+  }),
+  setSymbol: (symbol: string) => set((state) => {
+    const matched = state.availableSymbols.find(s => s.value === symbol);
+    return { selectedSymbol: symbol, lotSize: matched?.lotSize || 1 };
+  }),
   setExpiry: (expiry: string) => set({ selectedExpiry: expiry }),
   toggleLots: () => set((state) => ({ showLots: !state.showLots })),
   

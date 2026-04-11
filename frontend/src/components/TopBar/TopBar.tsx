@@ -5,14 +5,13 @@ import { ShieldCheck, ShieldAlert, ChevronDown, LogIn, LogOut } from 'lucide-rea
 import { API_URL } from '../../config';
 
 export const TopBar: React.FC = () => {
-  const { selectedSymbol, lastUpdate, connected, spotPrice, setSymbol } = useOptionChainStore();
-  const [symbols, setSymbols] = useState<{ label: string, value: string }[]>([]);
+  const { availableSymbols, setAvailableSymbols, selectedSymbol, lastUpdate, connected, spotPrice, setSymbol } = useOptionChainStore();
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
     fetch(`${API_URL}/market/symbols`)
       .then(res => res.json())
-      .then(setSymbols)
+      .then(setAvailableSymbols)
       .catch(console.error);
   }, []);
 
@@ -52,7 +51,7 @@ export const TopBar: React.FC = () => {
               onChange={(e) => setSymbol(e.target.value)}
               className="appearance-none bg-zinc-800 px-4 py-1.5 pr-8 rounded-lg border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 cursor-pointer text-sm"
             >
-              {symbols.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+              {availableSymbols.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
             </select>
             <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
           </div>

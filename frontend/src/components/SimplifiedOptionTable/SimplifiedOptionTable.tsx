@@ -42,16 +42,8 @@ const gexCls = (v: number) =>
 
 // Component ───────────────────────────────────────────────────────────────────
 export const SimplifiedOptionTable: React.FC = () => {
-  const { chain, atmStrike, spotPrice, showLots, selectedSymbol } = useOptionChainStore();
+  const { chain, atmStrike, spotPrice, showLots, lotSize, selectedSymbol } = useOptionChainStore();
   const [showBreakdown, setShowBreakdown] = useState(true);
-
-  const lotSize = useMemo(() => {
-    if (selectedSymbol.includes('NIFTYBANK')) return 15;
-    if (selectedSymbol.includes('NIFTY50') || selectedSymbol.includes('NIFTY-INDEX')) return 25;
-    if (selectedSymbol.includes('FINNIFTY')) return 25;
-    if (selectedSymbol.includes('SENSEX')) return 10;
-    return 1;
-  }, [selectedSymbol]);
 
   const fmtOI = (v: number) =>
     showLots ? Math.round(v / lotSize).toLocaleString() : v.toLocaleString();

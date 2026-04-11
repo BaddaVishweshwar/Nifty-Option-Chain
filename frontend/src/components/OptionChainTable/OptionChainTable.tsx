@@ -14,16 +14,8 @@ import { OIBar } from './OIBar';
 const columnHelper = createColumnHelper<OptionStrike>();
 
 export const OptionChainTable: React.FC = () => {
-  const { chain, atmStrike, spotPrice, showLots, toggleLots, selectedSymbol } = useOptionChainStore();
+  const { chain, atmStrike, spotPrice, showLots, toggleLots, lotSize, selectedSymbol } = useOptionChainStore();
   const parentRef = useRef<HTMLDivElement>(null);
-
-  const lotSize = useMemo(() => {
-    if (selectedSymbol.includes('NIFTYBANK')) return 15;
-    if (selectedSymbol.includes('NIFTY50') || selectedSymbol.includes('NIFTY-INDEX')) return 25;
-    if (selectedSymbol.includes('FINNIFTY')) return 25;
-    if (selectedSymbol.includes('SENSEX')) return 10;
-    return 1;
-  }, [selectedSymbol]);
 
   const formatOI = (val: number) => {
     if (showLots) return Math.round(val / lotSize).toLocaleString();
