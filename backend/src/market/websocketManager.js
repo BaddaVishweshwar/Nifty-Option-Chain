@@ -89,7 +89,7 @@ const initUpstoxWS = async (token) => {
                         iv: iv,
                         delta: greeks.delta || 0,
                         theta: normalizeTheta(greeks.theta || 0),
-                        gamma: (greeks.gamma || 0) * 100,
+                        gamma: greeks.gamma || 0,
                         vega: greeks.vega || 0
                     };
                     tickStore.setTick(symbol, normalizedTick);

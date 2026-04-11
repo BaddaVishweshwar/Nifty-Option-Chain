@@ -68,7 +68,7 @@ const getUpstoxOptionChain = async (symbol, strikecount) => {
                     iv: extractIv(ceG),
                     delta: ceG.delta || 0,
                     theta: normalizeTheta(ceG.theta || 0),
-                    gamma: (ceG.gamma || 0) * 100,
+                    gamma: ceG.gamma || 0,
                     vega: ceG.vega || 0
                 },
                 pe: {
@@ -79,7 +79,7 @@ const getUpstoxOptionChain = async (symbol, strikecount) => {
                     iv: extractIv(peG),
                     delta: peG.delta || 0,
                     theta: normalizeTheta(peG.theta || 0),
-                    gamma: (peG.gamma || 0) * 100,
+                    gamma: peG.gamma || 0,
                     vega: peG.vega || 0
                 }
             };
