@@ -19,6 +19,7 @@ const CW = {
   putOI:     115,
   putGex:    130,
   netGex:    130,
+  signal:    90,
 } as const;
 
 // Helpers ─────────────────────────────────────────────────────────────────────
@@ -106,6 +107,7 @@ export const SimplifiedOptionTable: React.FC = () => {
           <col style={{ width: CW.putOI }} />
           <col style={{ width: CW.putGex }} />
           <col style={{ width: CW.netGex }} />
+          <col style={{ width: CW.signal }} />
         </colgroup>
 
         {/* ─── THEAD (sticky) ─── */}
@@ -126,7 +128,7 @@ export const SimplifiedOptionTable: React.FC = () => {
               Strikes
             </th>
             <th
-              colSpan={5}
+              colSpan={6}
               className={`${thBase} py-1.5 text-[10px] font-black tracking-[0.25em] text-red-400/60 uppercase border-l border-zinc-800/50`}
             >
               Put Side
@@ -188,6 +190,12 @@ export const SimplifiedOptionTable: React.FC = () => {
               <div className="flex flex-col items-center gap-0.5">
                 <span className="text-[9px] font-black uppercase text-violet-400/90">Net GEX</span>
                 <span className="text-[7px] text-zinc-600 leading-none font-normal">C + P</span>
+              </div>
+            </th>
+            {/* Signal */}
+            <th className={`${thBase} py-2 border-l border-zinc-800/50`}>
+              <div className="flex flex-col items-center gap-0.5">
+                <span className="text-[9px] font-black uppercase text-zinc-400/90">Signal</span>
               </div>
             </th>
           </tr>
@@ -301,6 +309,18 @@ export const SimplifiedOptionTable: React.FC = () => {
                         <div><span className="text-zinc-600">C </span><span className="text-emerald-400/80">{fmtGex(callGex)}</span></div>
                         <div><span className="text-zinc-600">P </span><span className="text-rose-400/80">{fmtGex(putGex)}</span></div>
                       </div>
+                    )}
+                  </div>
+                </td>
+
+                {/* ── Signal ── */}
+                <td className={`${tdBase} border-l border-zinc-800/30 bg-zinc-900/40`}>
+                  <div className="flex flex-col items-center justify-center">
+                    {netGex > 0 && (
+                      <span className="text-[10px] font-black uppercase tracking-wider text-rose-400/90 bg-rose-400/10 px-2 py-0.5 rounded shadow-sm">Negative</span>
+                    )}
+                    {netGex < 0 && (
+                      <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400/90 bg-emerald-400/10 px-2 py-0.5 rounded shadow-sm">Positive</span>
                     )}
                   </div>
                 </td>
