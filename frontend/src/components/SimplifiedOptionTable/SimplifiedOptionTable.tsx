@@ -15,13 +15,15 @@ const COL = {
   strike: '155px',
 };
 
-// Full 9-column grid template  (L→R)
-// callGex | callOI | callGamma | callLTP | STRIKE | putLTP | putGamma | putOI | putGex
-const GRID = `${COL.gex} ${COL.oi} ${COL.gamma} ${COL.ltp} ${COL.strike} ${COL.ltp} ${COL.gamma} ${COL.oi} ${COL.gex}`;
+// Full 10-column grid template  (L→R)
+// callGex | callOI | callGamma | callLTP | STRIKE | putLTP | putGamma | putOI | putGex | netGex
+const NET_COL = '130px';
+const GRID = `${COL.gex} ${COL.oi} ${COL.gamma} ${COL.ltp} ${COL.strike} ${COL.ltp} ${COL.gamma} ${COL.oi} ${COL.gex} ${NET_COL}`;
 
 // Call side header span = gex + oi + gamma + ltp
 const CALL_SPAN = `calc(${COL.gex} + ${COL.oi} + ${COL.gamma} + ${COL.ltp})`;
-const PUT_SPAN  = CALL_SPAN;
+// Put side header span = ltp + gamma + oi + gex + netGex
+const PUT_SPAN  = `calc(${COL.ltp} + ${COL.gamma} + ${COL.oi} + ${COL.gex} + ${NET_COL})`;
 
 // Format GEX as readable millions/billions
 const formatGex = (val: number): string => {
@@ -99,7 +101,7 @@ export const SimplifiedOptionTable: React.FC = () => {
         <div className="sticky top-0 z-20 bg-zinc-900 border-b border-zinc-800 shadow-lg">
 
           {/* Row 1: Section labels */}
-          <div className="flex border-b border-zinc-800/50" style={{ minWidth: '1155px' }}>
+          <div className="flex border-b border-zinc-800/50" style={{ minWidth: '1285px' }}>
             <div
               style={{ width: CALL_SPAN, minWidth: CALL_SPAN }}
               className="py-1.5 text-[10px] font-black text-blue-400/60 tracking-[0.3em] text-center uppercase border-r border-zinc-800/50 shrink-0"
@@ -121,7 +123,7 @@ export const SimplifiedOptionTable: React.FC = () => {
           </div>
 
           {/* Row 2: Column labels */}
-          <div className="grid" style={{ gridTemplateColumns: GRID, minWidth: '1155px' }}>
+          <div className="grid" style={{ gridTemplateColumns: GRID, minWidth: '1285px' }}>
 
             {/* Call GEX header */}
             <div className="px-3 py-2.5 flex flex-col items-center justify-center gap-0.5">
@@ -160,11 +162,17 @@ export const SimplifiedOptionTable: React.FC = () => {
               </div>
               <span className="text-[8px] text-zinc-600 font-medium">OI × S² × γ × (+1)</span>
             </div>
+
+            {/* Net GEX header */}
+            <div className="px-3 py-2.5 flex flex-col items-center justify-center gap-0.5 border-l-2 border-zinc-700/50">
+              <span className="text-[10px] font-black uppercase text-violet-400/80">Net GEX</span>
+              <span className="text-[8px] text-zinc-600 font-medium">Call GEX + Put GEX</span>
+            </div>
           </div>
         </div>
 
         {/* ─── VIRTUALIZED BODY ─── */}
-        <div style={{ height: `${rowVirtualizer.getTotalSize()}px`, position: 'relative', minWidth: '1155px' }}>
+        <div style={{ height: `${rowVirtualizer.getTotalSize()}px`, position: 'relative', minWidth: '1285px' }}>
           {rowVirtualizer.getVirtualItems().map((virtualRow) => {
             const s       = chain[virtualRow.index];
             const isATM   = s.strike === atmStrike;
@@ -174,6 +182,7 @@ export const SimplifiedOptionTable: React.FC = () => {
             // GEX calculations
             const callGex = s.ce.oi * spotSq * (s.ce.gamma ?? 0) * -1;
             const putGex  = s.pe.oi * spotSq * (s.pe.gamma ?? 0) * 1;
+            const netGex  = callGex + putGex;
 
             return (
               <div
@@ -258,6 +267,19 @@ export const SimplifiedOptionTable: React.FC = () => {
                       <div>OI: <span className="text-zinc-400">{s.pe.oi.toLocaleString()}</span></div>
                       <div>S²: <span className="text-zinc-400">{fmtNum(spotSq)}</span></div>
                       <div>γ: <span className="text-red-400/80">{(s.pe.gamma ?? 0).toFixed(4)}</span></div>
+                    </div>
+                  )}
+                </div>
+
+                {/* ── Net GEX ── */}
+                <div className="flex flex-col items-center justify-center px-3 gap-0.5 border-l-2 border-zinc-700/50 bg-zinc-900/30">
+                  <span className={`text-[13px] font-bold font-mono tracking-tight ${gexColor(netGex)}`}>
+                    {formatGex(netGex)}
+                  </span>
+                  {showGexBreakdown && (
+                    <div className="text-[8px] text-zinc-500 font-mono leading-tight text-center space-y-0.5">
+                      <div>C: <span className="text-emerald-400/70">{formatGex(callGex)}</span></div>
+                      <div>P: <span className="text-rose-400/70">{formatGex(putGex)}</span></div>
                     </div>
                   )}
                 </div>
