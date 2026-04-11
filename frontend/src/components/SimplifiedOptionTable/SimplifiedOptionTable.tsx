@@ -153,7 +153,7 @@ export const SimplifiedOptionTable: React.FC = () => {
             </th>
             {/* Call γ */}
             <th className={`${thBase} py-2.5 text-[9px] font-black uppercase text-blue-400/70`}>
-              γ
+              GAMMA
             </th>
             {/* Call LTP */}
             <th className={`${thBase} py-2.5 text-[9px] font-black uppercase text-zinc-300 border-r border-zinc-800/50`}>
@@ -169,7 +169,7 @@ export const SimplifiedOptionTable: React.FC = () => {
             </th>
             {/* Put γ */}
             <th className={`${thBase} py-2.5 text-[9px] font-black uppercase text-red-400/70`}>
-              γ
+              GAMMA
             </th>
             {/* Put OI */}
             <th className={`${thBase} py-2.5 text-[9px] font-black uppercase text-zinc-400`}>
